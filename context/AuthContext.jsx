@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   const checkAuth = async () => {
     try {
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      const { data } = await axios.get("/api/users/check", {
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/check`, {
         headers: { token },
       });
       if (data.success) {
@@ -32,13 +32,13 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("token");
       setAuthUser(null);
     } finally {
-      setLoading(false); // Set loading to false after check
+      setLoading(false);
     }
   };
 
   const login = async (type, { fullName, email, password, bio }) => {
     try {
-      const { data } = await axios.post(`/api/users/${type}`, {
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/${type}`, {
         fullName,
         email,
         password,
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async ({ fullName, bio, profilePic }) => {
     try {
       const { data } = await axios.put(
-        "/api/users/update-profile",
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/update-profile`,
         { fullName, bio, profilePic },
         { headers: { token: localStorage.getItem("token") } }
       );
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     socket,
     onlineUsers,
     updateProfile,
-    loading, // Expose loading state
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
