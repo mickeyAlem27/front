@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(),],
  server: {
     proxy: {
-      '/api': 'https://back-3ita.onrender.com', // or your backend port
+      '/api': 'http://localhost:5000', // or your backend port
     },
   },
 
