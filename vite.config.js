@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(),],
  server: {
     proxy: {
-      '/api': 'https://web-chat-back-1.onrender.com', // or your backend port
+      '/api': 'http://localhost:5000', // or your backend port
     },
   },
 
