@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import assets from '../assets/assets';
 import { formatMessageTime } from '../lib/utils';
@@ -66,7 +65,7 @@ const ChatContainer = () => {
   }, [messages]);
 
   return selectedUser ? (
-    <div className="flex h-full flex-col bg-gray-800/50">
+    <div className="relative flex h-full flex-col overflow-y-auto bg-gray-800/50">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-gray-500 px-4 py-3">
         <img
@@ -87,11 +86,11 @@ const ChatContainer = () => {
           alt=""
           className="h-6 w-6 md:hidden"
         />
-        <img src={assets.help_icon} alt="" className="h-5 w-5 hidden md:block" />
+        <img src={assets.help_icon} alt="" className="h-5 w-5 max-md:hidden" />
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -104,7 +103,7 @@ const ChatContainer = () => {
                 <img
                   src={msg.image}
                   alt=""
-                  className="max-w-[180px] sm:max-w-[200px] rounded-lg border border-gray-700 mb-6"
+                  className="max-w-[200px] rounded-lg border border-gray-700 mb-6"
                 />
               ) : (
                 <div className="mb-6">
@@ -120,12 +119,12 @@ const ChatContainer = () => {
                       {msg.replyTo.image ? (
                         <img src={msg.replyTo.image} alt="" className="mt-1 max-w-[100px] rounded" />
                       ) : (
-                        <p className="max-w-[180px] sm:max-w-[200px] truncate">{msg.replyTo.text}</p>
+                        <p className="max-w-[200px] truncate">{msg.replyTo.text}</p>
                       )}
                     </div>
                   )}
                   <p
-                    className={`max-w-[180px] sm:max-w-[200px] break-words rounded-lg bg-violet-500/30 p-2 text-sm text-white ${
+                    className={`max-w-[200px] break-words rounded-lg bg-violet-500/30 p-2 text-sm text-white ${
                       msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'
                     }`}
                   >
@@ -179,7 +178,7 @@ const ChatContainer = () => {
       </div>
 
       {/* Bottom Input Area */}
-      <div className="flex items-center gap-3 border-t border-gray-500 p-3">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3">
         <div className="flex flex-1 flex-col">
           {replyingTo && (
             <div className="flex items-center rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
@@ -238,7 +237,7 @@ const ChatContainer = () => {
     <div className="flex flex-col items-center justify-center gap-2 bg-white/10 text-gray-500 md:flex">
       <video
         src={assets.Message}
-        className="max-w-[200px] sm:max-w-[240px] rounded-lg"
+        className="max-w-[240px] rounded-lg"
         autoPlay
         loop
         muted

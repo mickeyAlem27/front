@@ -66,7 +66,7 @@ const Sidebar = () => {
         value={searchQuery}
         onChange={handleSearch}
         placeholder="Search users to add..."
-        className="mb-3 w-full rounded-full bg-gray-700/50 p-2 text-sm text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-600"
+        className="mb-3 w-full rounded-full bg-gray-700/50 p-3 text-sm text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-600"
       />
       {searchResults.length > 0 && (
         <div className="mb-3">
