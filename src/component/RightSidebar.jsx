@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useContext } from 'react';
 import assets from '../assets/assets';
 import { ChatContext } from '../../context/ChatContext';
@@ -14,16 +15,12 @@ const RightSidebar = () => {
 
   return (
     selectedUser && (
-      <div
-        className={`flex h-full w-full flex-col overflow-y-auto bg-gray-800/10 text-white ${
-          selectedUser ? 'md:flex' : 'hidden'
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2 px-4 py-6 text-xs">
+      <div className="flex h-full flex-col bg-gray-800/10 text-white md:flex hidden">
+        <div className="flex flex-col items-center gap-2 px-4 py-4 text-xs">
           <img
             src={selectedUser?.profilePic || assets.avatar_icon}
             alt=""
-            className="h-20 w-20 rounded-full"
+            className="h-16 w-16 rounded-full"
           />
           <h1 className="flex items-center gap-2 px-4 text-xl font-medium">
             {onlineUsers.includes(selectedUser._id) && (
@@ -50,7 +47,7 @@ const RightSidebar = () => {
         </div>
         <hr className="mx-4 border-gray-500" />
         <p className="px-4 py-2 text-xs font-medium text-gray-300">Media</p>
-        <div className="grid grid-cols-2 gap-4 p-4">
+        <div className="grid grid-cols-2 gap-4 p-4 max-h-[50vh] overflow-y-auto">
           {msgImages.map((url, index) => (
             <div key={index} onClick={() => window.open(url)} className="cursor-pointer">
               <img src={url} alt="" className="h-full rounded-md" />

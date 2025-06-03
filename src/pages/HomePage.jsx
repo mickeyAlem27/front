@@ -11,15 +11,15 @@ const HomePage = () => {
   const getGridCols = () =>
     selectedUser
       ? 'grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] xl:grid-cols-[1fr_2fr_1fr]'
-      : 'grid-cols-1 md:grid-cols-2';
+      : 'grid-cols-1 md:grid-cols-[1fr_1.5fr]';
 
   return (
-    <div className="flex h-screen w-full px-4 py-6 sm:px-8 sm:py-8 md:px-16 md:py-12">
-      {/* Main container with consistent padding */}
+    <div className="flex h-screen w-full flex-col overflow-hidden">
+      {/* Main container with viewport height and no overflow */}
       <div
         className={`
-          h-full w-full overflow-hidden rounded-2xl border-2 border-gray-600
-          backdrop-blur-xl ${getGridCols()} grid relative
+          flex h-full w-full flex-1 overflow-hidden rounded-2xl border-2 border-gray-600
+          backdrop-blur-xl ${getGridCols()} grid
         `}
       >
         <Sidebar />
