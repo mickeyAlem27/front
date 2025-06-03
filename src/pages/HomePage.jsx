@@ -7,20 +7,19 @@ import { ChatContext } from '../../context/ChatContext';
 const HomePage = () => {
   const { selectedUser } = useContext(ChatContext);
 
-  const getGridCols = () => 
-    selectedUser 
-      ? 'md:grid-cols-[1fr_1.5fr_1fr] xl:grid-cols-[1fr_2fr_1fr]' 
-      : 'md:grid-cols-2';
+  // Simplified grid columns based on selectedUser
+  const getGridCols = () =>
+    selectedUser
+      ? 'grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] xl:grid-cols-[1fr_2fr_1fr]'
+      : 'grid-cols-1 md:grid-cols-2';
 
   return (
-    <div className='border w-full h-screen sm:px-[15%] sm:py-[5%]'>
-      <div 
+    <div className="flex h-screen w-full px-4 py-6 sm:px-8 sm:py-8 md:px-16 md:py-12">
+      {/* Main container with consistent padding */}
+      <div
         className={`
-          backdrop-blur-xl 
-          border-2 border-gray-600 
-          rounded-2xl overflow-hidden 
-          h-full grid grid-cols-1 relative 
-          ${getGridCols()}
+          h-full w-full overflow-hidden rounded-2xl border-2 border-gray-600
+          backdrop-blur-xl ${getGridCols()} grid relative
         `}
       >
         <Sidebar />

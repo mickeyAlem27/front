@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import assets from '../assets/assets';
 import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContext';
@@ -12,42 +12,53 @@ const RightSidebar = () => {
     setMsgImages(messages.filter((msg) => msg.image).map((msg) => msg.image));
   }, [messages]);
 
-  return selectedUser && (
-    <div className={`bg-[#8185B2]/10 text-white w-full relative overflow-y-scroll ${selectedUser ? "max-md:hidden" : ""}`}>
-      <div className='pt-16 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
-  <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-20 aspect-[1/1] rounded-full'/>
-  <h1 className='px-10 text-xl font-medium mx-auto flex items-center gap-2'>
-    {onlineUsers.includes(selectedUser._id) && <p className='w-2 h-2 rounded-full bg-green-500'></p>}
-    {selectedUser.fullName}
-  </h1>
-  <p className='px-10 mx-auto'>{selectedUser.bio}</p>
-  {selectedUser.blocked && (
-    <span className='text-red-500 text-xs'>Blocked</span>
-  )}
-  <button
-    onClick={() => selectedUser.blocked ? unblockUser(selectedUser._id) : blockUser(selectedUser._id)}
-    className='text-sm text-red-500 cursor-pointer'
-  >
-    {selectedUser.blocked ? "Unblock User" : "Block User"}
-  </button>
-  <button
-    onClick={() => removeContact(selectedUser._id)}
-    className='text-sm text-red-500 cursor-pointer'
-  >
-    Remove Contact
-  </button>
-</div>
-      <hr className="px-5 text-xs" />
-      <p>Media</p>
-      <div className='mt-2 max-h-[200px] overflow grid grid-cols-2 gap-4 opacity-80'>
-        {msgImages.map((url, index) => (
-          <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded'>
-            <img src={url} alt="" className='h-full rounded-md'/>
-          </div>
-        ))}
+  return (
+    selectedUser && (
+      <div
+        className={`flex h-full w-full flex-col overflow-y-auto bg-gray-800/10 text-white ${
+          selectedUser ? 'md:flex' : 'hidden'
+        }`}
+      >
+        <div className="flex flex-col items-center gap-2 px-4 py-6 text-xs">
+          <img
+            src={selectedUser?.profilePic || assets.avatar_icon}
+            alt=""
+            className="h-20 w-20 rounded-full"
+          />
+          <h1 className="flex items-center gap-2 px-4 text-xl font-medium">
+            {onlineUsers.includes(selectedUser._id) && (
+              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            )}
+            {selectedUser.fullName}
+          </h1>
+          <p className="px-4 text-gray-300">{selectedUser.bio}</p>
+          {selectedUser.blocked && <span className="text-xs text-red-500">Blocked</span>}
+          <button
+            onClick={() =>
+              selectedUser.blocked ? unblockUser(selectedUser._id) : blockUser(selectedUser._id)
+            }
+            className="text-sm text-red-500 hover:underline"
+          >
+            {selectedUser.blocked ? 'Unblock User' : 'Block User'}
+          </button>
+          <button
+            onClick={() => removeContact(selectedUser._id)}
+            className="text-sm text-red-500 hover:underline"
+          >
+            Remove Contact
+          </button>
+        </div>
+        <hr className="mx-4 border-gray-500" />
+        <p className="px-4 py-2 text-xs font-medium text-gray-300">Media</p>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          {msgImages.map((url, index) => (
+            <div key={index} onClick={() => window.open(url)} className="cursor-pointer">
+              <img src={url} alt="" className="h-full rounded-md" />
+            </div>
+          ))}
+        </div>
       </div>
-      
-    </div>
+    )
   );
 };
 
