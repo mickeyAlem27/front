@@ -18,7 +18,7 @@ const HomePage = () => {
       {/* Main container with viewport height and scrollable */}
       <div
         className={`
-          flex h-full w-full flex-1 rounded-none sm:rounded-2xl border-2 border-gray-600
+          flex h-full w-full flex-1 overflow-visible rounded-none sm:rounded-2xl border-2 border-gray-600
           backdrop-blur-xl ${getGridCols()} grid max-w-screen-xl mx-auto px-2 sm:px-4
         `}
       >
