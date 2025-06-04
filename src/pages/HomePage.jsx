@@ -14,12 +14,12 @@ const HomePage = () => {
       : 'grid-cols-1 md:grid-cols-[1fr_1.5fr]';
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden">
-      {/* Main container with viewport height and no overflow */}
+    <div className="flex min-h-screen w-full flex-col overflow-y-auto">
+      {/* Main container with viewport height and scrollable */}
       <div
         className={`
-          flex h-full w-full flex-1 overflow-hidden rounded-2xl border-2 border-gray-600
-          backdrop-blur-xl ${getGridCols()} grid
+          flex h-full w-full flex-1 rounded-none sm:rounded-2xl border-2 border-gray-600
+          backdrop-blur-xl ${getGridCols()} grid max-w-screen-xl mx-auto px-2 sm:px-4
         `}
       >
         <Sidebar />
