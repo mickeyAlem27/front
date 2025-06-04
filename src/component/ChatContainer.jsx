@@ -89,49 +89,51 @@ const ChatContainer = () => {
         <img src={assets.help_icon} alt="" className="h-5 w-5 max-md:hidden" />
       </div>
 
-      {/* Chat Area */}
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex items-end gap-2 ${
-              msg.senderId._id !== authUser._id ? 'flex-row-reverse' : 'justify-end'
-            }`}
-          >
-            <div className="group relative">
-              {msg.image ? (
-                <img
-                  src={msg.image}
-                  alt=""
-                  className="max-w-[200px] rounded-lg border border-gray-700 mb-6"
-                />
-              ) : (
-                <div className="mb-6">
-                  {msg.replyTo && (
-                    <div className="rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
-                      <p>
-                        Replying to{' '}
-                        {msg.replyTo.senderId._id === authUser._id
-                          ? 'You'
-                          : selectedUser.fullName}
-                        :
-                      </p>
-                      {msg.replyTo.image ? (
-                        <img src={msg.replyTo.image} alt="" className="mt-1 max-w-[100px] rounded" />
-                      ) : (
-                        <p className="max-w-[200px] truncate">{msg.replyTo.text}</p>
-                      )}
-                    </div>
-                  )}
-                  <p
-                    className={`max-w-[200px] break-words rounded-lg bg-violet-500/30 p-2 text-sm text-white ${
-                      msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'
-                    }`}
-                  >
-                    {msg.text}
-                  </p>
-                </div>
-              )}
+     {/* Chat Area */}
+<div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
+  {messages.map((msg, index) => (
+    <div
+      key={index}
+      className={`flex items-end gap-2 ${
+        msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+      }`}
+    >
+      <div className="group relative">
+        {msg.image ? (
+          <img
+            src={msg.image}
+            alt=""
+            className="max-w-[200px] rounded-lg border border-gray-700 mb-6"
+          />
+        ) : (
+          <div className="mb-6">
+            {msg.replyTo && (
+              <div className="rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
+                <p>
+                  Replying to{' '}
+                  {msg.replyTo.senderId._id === authUser._id
+                    ? 'You'
+                    : selectedUser.fullName}
+                  :
+                </p>
+                {msg.replyTo.image ? (
+                  <img src={msg.replyTo.image} alt="" className="mt-1 max-w-[100px] rounded" />
+                ) : (
+                  <p className="max-w-[200px] truncate">{msg.replyTo.text}</p>
+                )}
+              </div>
+            )}
+            <p
+              className={`max-w-[200px] break-words rounded-lg p-2 text-sm text-white ${
+                msg.senderId._id === authUser._id
+                  ? 'bg-violet-500/30 rounded-br-none'
+                  : 'bg-gray-700/50 rounded-bl-none'
+              }`}
+            >
+              {msg.text}
+            </p>
+          </div>
+        )}
               {/* Hover Menu */}
               {msg.senderId._id === authUser._id && !msg.isDeleted && (
                 <div className="absolute right-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
