@@ -89,51 +89,51 @@ const ChatContainer = () => {
         <img src={assets.help_icon} alt="" className="h-5 w-5 sm:h-6 sm:w-6 hidden md:block" />
       </div>
 
-     {/* Chat Area */}
-<div className="flex-1 overflow-y-auto p-4 sm:p-6">
-  {messages.map((msg, index) => (
-    <div
-      key={index}
-      className={`flex items-end gap-3 w-full ${
-        msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
-      }`}
-    >
-      <div className="group relative flex flex-col w-full max-w-[90%] sm:max-w-[80%] md:max-w-[75%] lg:max-w-[70%]">
-        {msg.image ? (
-          <img
-            src={msg.image}
-            alt=""
-            className="w-full rounded-xl border border-gray-600 mb-4"
-          />
-        ) : (
-          <div className="mb-4 w-full">
-            {msg.replyTo && (
-              <div className="rounded-t-xl bg-gray-700/60 p-2.5 text-xs sm:text-sm text-gray-300 w-full">
-                <p>
-                  Replying to{' '}
-                  {msg.replyTo.senderId._id === authUser._id
-                    ? 'You'
-                    : selectedUser.fullName}
-                  :
-                </p>
-                {msg.replyTo.image ? (
-                  <img src={msg.replyTo.image} alt="" className="mt-1 w-full max-w-[100px] rounded" />
-                ) : (
-                  <p className="w-full max-w-[90%] truncate">{msg.replyTo.text}</p>
-                )}
-              </div>
-            )}
-            <p
-              className={`w-full break-words rounded-xl p-3 text-sm sm:text-base text-white ${
-                msg.senderId._id === authUser._id
-                  ? 'bg-violet-600/40 rounded-br-none'
-                  : 'bg-gray-700/60 rounded-bl-none'
-              }`}
-            >
-              {msg.text}
-            </p>
-          </div>
-        )}
+      {/* Chat Area */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex items-end gap-3 max-w-full ${
+              msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+            }`}
+          >
+            <div className="group relative flex flex-col">
+              {msg.image ? (
+                <img
+                  src={msg.image}
+                  alt=""
+                  className="w-full max-w-[70%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] rounded-xl border border-gray-600 mb-4"
+                />
+              ) : (
+                <div className="mb-4">
+                  {msg.replyTo && (
+                    <div className="rounded-t-xl bg-gray-700/60 p-2.5 text-xs sm:text-sm text-gray-300 max-w-full sm:max-w-[70%]">
+                      <p>
+                        Replying to{' '}
+                        {msg.replyTo.senderId._id === authUser._id
+                          ? 'You'
+                          : selectedUser.fullName}
+                        :
+                      </p>
+                      {msg.replyTo.image ? (
+                        <img src={msg.replyTo.image} alt="" className="mt-1 w-full max-w-[100px] rounded" />
+                      ) : (
+                        <p className="w-full max-w-[90%] truncate">{msg.replyTo.text}</p>
+                      )}
+                    </div>
+                  )}
+                  <p
+                    className={`w-full max-w-[70%] sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%] break-words rounded-xl p-3 text-sm sm:text-base text-white ${
+                      msg.senderId._id === authUser._id
+                        ? 'bg-violet-600/40 rounded-br-none'
+                        : 'bg-gray-700/60 rounded-bl-none'
+                    }`}
+                  >
+                    {msg.text}
+                  </p>
+                </div>
+              )}
               {/* Hover Menu */}
               {msg.senderId._id === authUser._id && !msg.isDeleted && (
                 <div className="absolute right-0 top-0 hidden rounded bg-gray-800 text-xs sm:text-sm text-white group-hover:block">
