@@ -11,7 +11,6 @@ const Sidebar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  console.log('Sidebar users:', users);
 
   const handleSearch = async (e) => {
     const query = e.target.value;
@@ -50,14 +49,14 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-full flex-col bg-gray-800/80 p-3">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-white">Chats</h2>
+    <div className="flex h-full flex-col bg-gray-800/90 p-3 sm:p-4">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg sm:text-xl font-bold text-white">Chats</h2>
         <Link to="/profile">
           <img
             src={authUser?.profilePic || assets.avatar_icon}
             alt="Profile"
-            className="h-8 w-8 rounded-full sm:h-10 sm:w-10"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full"
           />
         </Link>
       </div>
@@ -66,28 +65,28 @@ const Sidebar = () => {
         value={searchQuery}
         onChange={handleSearch}
         placeholder="Search users to add..."
-        className="mb-3 w-full rounded-full bg-gray-700/50 p-3 text-sm text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-600"
+        className="mb-4 w-full rounded-full bg-gray-700/60 p-3 sm:p-3.5 text-sm sm:text-base text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-500"
       />
       {searchResults.length > 0 && (
-        <div className="mb-3">
-          <h3 className="mb-2 text-xs text-gray-300">Search Results</h3>
+        <div className="mb-4">
+          <h3 className="mb-2 text-xs sm:text-sm text-gray-300">Search Results</h3>
           <ul className="space-y-2">
             {searchResults.map((user) => (
               <li
                 key={user._id}
-                className="flex items-center justify-between rounded-lg bg-gray-700/50 p-2"
+                className="flex items-center justify-between rounded-lg bg-gray-700/60 p-2 sm:p-3"
               >
                 <div className="flex items-center">
                   <img
                     src={user.profilePic || assets.avatar_icon}
                     alt={user.fullName}
-                    className="mr-2 h-6 w-6 rounded-full sm:h-8 sm:w-8"
+                    className="mr-2 h-6 w-6 sm:h-8 sm:w-8 rounded-full"
                   />
-                  <span className="truncate text-sm text-white">{user.fullName}</span>
+                  <span className="truncate text-sm sm:text-base text-white">{user.fullName}</span>
                 </div>
                 <button
                   onClick={() => handleAddContact(user._id)}
-                  className="rounded-full bg-violet-600 px-2 py-1 text-xs text-white hover:bg-violet-700"
+                  className="rounded-full bg-violet-600 px-3 py-1 text-xs sm:text-sm text-white hover:bg-violet-700"
                 >
                   Add
                 </button>
@@ -97,35 +96,35 @@ const Sidebar = () => {
         </div>
       )}
       <div className="flex-1 overflow-y-auto">
-        <h3 className="mb-2 text-xs text-gray-300">Your Contacts</h3>
+        <h3 className="mb-2 text-xs sm:text-sm text-gray-300">Your Contacts</h3>
         {users.length === 0 ? (
-          <p className="text-xs text-gray-400">No contacts available</p>
+          <p className="text-xs sm:text-sm text-gray-400">No contacts available</p>
         ) : (
           <ul className="space-y-2">
             {users.map((user) => (
               <li
                 key={user._id}
                 onClick={() => handleSelectUser(user)}
-                className="flex cursor-pointer items-center rounded-lg bg-gray-700/50 p-2 hover:bg-gray-600/50"
+                className="flex cursor-pointer items-center rounded-lg bg-gray-700/60 p-2 sm:p-3 hover:bg-gray-600/60"
               >
                 <img
                   src={user.profilePic || assets.avatar_icon}
                   alt={user.fullName}
-                  className="mr-2 h-6 w-6 rounded-full sm:h-8 sm:w-8"
+                  className="mr-2 h-6 w-6 sm:h-8 sm:w-8 rounded-full"
                 />
                 <div className="flex-1">
                   <div className="flex items-center">
-                    <span className="truncate text-sm text-white">{user.fullName}</span>
+                    <span className="truncate text-sm sm:text-base text-white">{user.fullName}</span>
                     {onlineUsers.includes(user._id) && (
-                      <span className="ml-2 h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                      <span className="ml-2 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500"></span>
                     )}
                     {unseenMessages[user._id] > 0 && (
-                      <span className="ml-2 rounded-full bg-violet-600 px-2 py-1 text-xs text-white">
+                      <span className="ml-2 rounded-full bg-violet-600 px-2 py-1 text-xs sm:text-sm text-white">
                         {unseenMessages[user._id]}
                       </span>
                     )}
                   </div>
-                  <span className="block truncate text-xs text-gray-400">{user.email}</span>
+                  <span className="block truncate text-xs sm:text-sm text-gray-400">{user.email}</span>
                 </div>
               </li>
             ))}
@@ -134,7 +133,7 @@ const Sidebar = () => {
       </div>
       <button
         onClick={logout}
-        className="mt-3 w-full rounded-full bg-violet-600 p-2 text-xs text-white hover:bg-violet-700"
+        className="mt-4 w-full rounded-full bg-violet-600 p-3 sm:p-3.5 text-sm sm:text-base text-white hover:bg-violet-700"
       >
         Logout
       </button>

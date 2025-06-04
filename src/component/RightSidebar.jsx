@@ -1,255 +1,54 @@
-
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import assets from '../assets/assets';
-import { formatMessageTime } from '../lib/utils';
 import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContext';
-import toast from 'react-hot-toast';
 
-const ChatContainer = () => {
-  const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
-  const { authUser, onlineUsers } = useContext(AuthContext);
-
-  const scrollEnd = useRef();
-  const [input, setInput] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null);
-
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (input.trim() === '') return;
-    if (selectedUser?.blocked) {
-      toast.error('Cannot send message to a blocked user');
-      return;
-    }
-    await sendMessage({ text: input.trim(), replyTo: replyingTo?._id });
-    setInput('');
-    setReplyingTo(null);
-  };
-
-  const handleSendImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-    if (selectedUser?.blocked) {
-      toast.error('Cannot send message to a blocked user');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      await sendMessage({ image: reader.result, replyTo: replyingTo?._id });
-      setReplyingTo(null);
-      e.target.value = '';
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleReply = (message) => {
-    setReplyingTo(message);
-  };
-
-  const cancelReply = () => {
-    setReplyingTo(null);
-  };
+const RightSidebar = () => {
+  const { selectedUser, messages, removeContact, blockUser, unblockUser } = useContext(ChatContext);
+  const { onlineUsers } = useContext(AuthContext);
+  const [msgImages, setMsgImages] = useState([]);
 
   useEffect(() => {
-    if (selectedUser) {
-      getMessages(selectedUser._id);
-    }
-  }, [selectedUser, getMessages]);
-
-  useEffect(() => {
-    if (scrollEnd.current && messages) {
-      scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    setMsgImages(messages.filter((msg) => msg.image).map((msg) => msg.image));
   }, [messages]);
 
-  return selectedUser ? (
-    <div className="flex h-full flex-col bg-gray-800/50">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-gray-500 px-4 py-3">
-        <img
-          src={selectedUser.profilePic || assets.avatar_icon}
-          alt=""
-          className="h-8 w-8 rounded-full"
-        />
-        <p className="flex flex-1 items-center gap-2 text-lg text-white">
-          {selectedUser.fullName}
-          {onlineUsers.includes(selectedUser._id) && (
-            <span className="h-2 w-2 rounded-full bg-green-500"></span>
-          )}
-          {selectedUser.blocked && <span className="text-xs text-red-500">Blocked</span>}
-        </p>
-        <img
-          onClick={() => setSelectedUser(null)}
-          src={assets.arrow_icon}
-          alt=""
-          className="h-6 w-6 md:hidden"
-        />
-        <img src={assets.help_icon} alt="" className="h-5 w-5 hidden md:block" />
-      </div>
-
-      {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex items-end gap-2 ${
-              msg.senderId._id !== authUser._id ? 'flex-row-reverse' : 'justify-end'
-            }`}
-          >
-            <div className="group relative">
-              {msg.image ? (
-                <img
-                  src={msg.image}
-                  alt=""
-                  className="max-w-[180px] sm:max-w-[200px] rounded-lg border border-gray-700 mb-6"
-                />
-              ) : (
-                <div className="mb-6">
-                  {msg.replyTo && (
-                    <div className="rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
-                      <p>
-                        Replying to{' '}
-                        {msg.replyTo.senderId._id === authUser._id
-                          ? 'You'
-                          : selectedUser.fullName}
-                        :
-                      </p>
-                      {msg.replyTo.image ? (
-                        <img src={msg.replyTo.image} alt="" className="mt-1 max-w-[100px] rounded" />
-                      ) : (
-                        <p className="max-w-[180px] sm:max-w-[200px] truncate">{msg.replyTo.text}</p>
-                      )}
-                    </div>
-                  )}
-                  <p
-                    className={`max-w-[180px] sm:max-w-[200px] break-words rounded-lg bg-violet-500/30 p-2 text-sm text-white ${
-                      msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'
-                    }`}
-                  >
-                    {msg.text}
-                  </p>
-                </div>
-              )}
-              {/* Hover Menu */}
-              {msg.senderId._id === authUser._id && !msg.isDeleted && (
-                <div className="absolute right-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
-                  <button
-                    onClick={() => handleReply(msg)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Reply
-                  </button>
-                  <button
-                    onClick={() => deleteMessage(msg._id)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-              {msg.senderId._id !== authUser._id && !msg.isDeleted && (
-                <div className="absolute left-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
-                  <button
-                    onClick={() => handleReply(msg)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Reply
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="text-center text-xs">
-              <img
-                src={
-                  msg.senderId._id === authUser._id
-                    ? authUser?.profilePic || assets.avatar_icon
-                    : selectedUser?.profilePic || assets.avatar_icon
-                }
-                alt=""
-                className="h-7 w-7 rounded-full"
-              />
-              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
-            </div>
+  return selectedUser && (
+    <div className={`bg-[#8185B2]/10 text-white w-full relative overflow-y-scroll ${selectedUser ? "max-md:hidden" : ""}`}>
+      <div className='pt-16 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
+  <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-20 aspect-[1/1] rounded-full'/>
+  <h1 className='px-10 text-xl font-medium mx-auto flex items-center gap-2'>
+    {onlineUsers.includes(selectedUser._id) && <p className='w-2 h-2 rounded-full bg-green-500'></p>}
+    {selectedUser.fullName}
+  </h1>
+  <p className='px-10 mx-auto'>{selectedUser.bio}</p>
+  {selectedUser.blocked && (
+    <span className='text-red-500 text-xs'>Blocked</span>
+  )}
+  <button
+    onClick={() => selectedUser.blocked ? unblockUser(selectedUser._id) : blockUser(selectedUser._id)}
+    className='text-sm text-red-500 cursor-pointer'
+  >
+    {selectedUser.blocked ? "Unblock User" : "Block User"}
+  </button>
+  <button
+    onClick={() => removeContact(selectedUser._id)}
+    className='text-sm text-red-500 cursor-pointer'
+  >
+    Remove Contact
+  </button>
+</div>
+      <hr className="px-5 text-xs" />
+      <p>Media</p>
+      <div className='mt-2 max-h-[200px] overflow grid grid-cols-2 gap-4 opacity-80'>
+        {msgImages.map((url, index) => (
+          <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded'>
+            <img src={url} alt="" className='h-full rounded-md'/>
           </div>
         ))}
-        <div ref={scrollEnd}></div>
       </div>
-
-      {/* Bottom Input Area */}
-      <div className="flex items-center gap-3 border-t border-gray-500 p-3">
-        <div className="flex flex-1 flex-col">
-          {replyingTo && (
-            <div className="flex items-center rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
-              <p className="flex-1">
-                Replying to{' '}
-                {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}:{' '}
-                {replyingTo.text || 'Image'}
-              </p>
-              <button onClick={cancelReply} className="text-red-500">
-                Cancel
-              </button>
-            </div>
-          )}
-          <div className="flex items-center rounded-full bg-gray-100/10 px-3">
-            <input
-              onChange={(e) => setInput(e.target.value)}
-              value={input}
-              onKeyDown={(e) => (e.key === 'Enter' ? handleSendMessage(e) : null)}
-              type="text"
-              placeholder={
-                selectedUser?.blocked
-                  ? 'Cannot message a blocked user'
-                  : replyingTo
-                    ? 'Type your reply...'
-                    : 'Send a message'
-              }
-              className="flex-1 rounded-lg border-none bg-transparent p-3 text-sm text-white placeholder-gray-400 outline-none"
-              disabled={selectedUser?.blocked}
-            />
-            <input
-              onChange={handleSendImage}
-              type="file"
-              id="image"
-              accept="image/png,image/jpeg"
-              hidden
-              disabled={selectedUser?.blocked}
-            />
-            <label htmlFor="image">
-              <img
-                src={assets.gallery_icon}
-                alt=""
-                className={`mr-2 h-5 w-5 ${selectedUser?.blocked ? 'opacity-50' : 'cursor-pointer'}`}
-              />
-            </label>
-          </div>
-        </div>
-        <img
-          onClick={handleSendMessage}
-          src={assets.send_button}
-          alt=""
-          className={`h-7 w-7 ${selectedUser?.blocked ? 'opacity-50' : 'cursor-pointer'}`}
-        />
-      </div>
-    </div>
-  ) : (
-    <div className="flex flex-col items-center justify-center gap-2 bg-white/10 text-gray-500 md:flex">
-      <video
-        src={assets.Message}
-        className="max-w-[200px] sm:max-w-[240px] rounded-lg"
-        autoPlay
-        loop
-        muted
-        onError={(e) => console.error('Video failed to load:', e)}
-      >
-        <source src={assets.Sample} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <p className="text-lg font-medium text-white">Feel free to chat</p>
+      
     </div>
   );
 };
 
-export default ChatContainer;
+export default RightSidebar;
