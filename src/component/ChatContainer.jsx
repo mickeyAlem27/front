@@ -88,27 +88,26 @@ const ChatContainer = () => {
         />
         <img src={assets.help_icon} alt="" className="h-5 w-5 max-md:hidden" />
       </div>
-
-     {/* Chat Area */}
-<div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
+{/* Chat Area */}
+<div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 sm:p-6">
   {messages.map((msg, index) => (
     <div
       key={index}
-      className={`flex items-end gap-2 ${
+      className={`flex items-end gap-3 ${
         msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
-      }`}
+      } max-w-full`}
     >
-      <div className="group relative">
+      <div className="group relative flex flex-col">
         {msg.image ? (
           <img
             src={msg.image}
             alt=""
-            className="max-w-[200px] rounded-lg border border-gray-700 mb-6"
+            className="w-full max-w-[70%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[30%] rounded-xl border border-gray-600 mb-4"
           />
         ) : (
-          <div className="mb-6">
+          <div className="mb-4">
             {msg.replyTo && (
-              <div className="rounded-t-lg bg-gray-700/50 p-2 text-xs text-gray-300">
+              <div className="rounded-t-lg bg-gray-700/60 p-2.5 text-xs text-gray-300 max-w-full sm:max-w-[70%]">
                 <p>
                   Replying to{' '}
                   {msg.replyTo.senderId._id === authUser._id
@@ -117,68 +116,67 @@ const ChatContainer = () => {
                   :
                 </p>
                 {msg.replyTo.image ? (
-                  <img src={msg.replyTo.image} alt="" className="mt-1 max-w-[100px] rounded" />
+                  <img src={msg.replyTo.image} alt="" className="mt-1 w-full max-w-[100px] rounded" />
                 ) : (
-                  <p className="max-w-[200px] truncate">{msg.replyTo.text}</p>
+                  <p className="w-full max-w-[90%] truncate">{msg.replyTo.text}</p>
                 )}
               </div>
             )}
             <p
-              className={`max-w-[200px] break-words rounded-lg p-2 text-sm text-white ${
+              className={`w-full max-w-[70%] sm:max-w-[60%] md:max-w-[50%] lg:max-w-[40%] break-words rounded-xl p-3 text-sm text-white ${
                 msg.senderId._id === authUser._id
-                  ? 'bg-violet-500/30 rounded-br-none'
-                  : 'bg-gray-700/50 rounded-bl-none'
+                  ? 'bg-violet-600/40 rounded-br-none'
+                  : 'bg-gray-700/60 rounded-bl-none'
               }`}
             >
               {msg.text}
             </p>
           </div>
         )}
-              {/* Hover Menu */}
-              {msg.senderId._id === authUser._id && !msg.isDeleted && (
-                <div className="absolute right-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
-                  <button
-                    onClick={() => handleReply(msg)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Reply
-                  </button>
-                  <button
-                    onClick={() => deleteMessage(msg._id)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-              {msg.senderId._id !== authUser._id && !msg.isDeleted && (
-                <div className="absolute left-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
-                  <button
-                    onClick={() => handleReply(msg)}
-                    className="block px-2 py-1 hover:bg-gray-700"
-                  >
-                    Reply
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="text-center text-xs">
-              <img
-                src={
-                  msg.senderId._id === authUser._id
-                    ? authUser?.profilePic || assets.avatar_icon
-                    : selectedUser?.profilePic || assets.avatar_icon
-                }
-                alt=""
-                className="h-7 w-7 rounded-full"
-              />
-              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
-            </div>
+        {/* Hover Menu */}
+        {msg.senderId._id === authUser._id && !msg.isDeleted && (
+          <div className="absolute right-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
+            <button
+              onClick={() => handleReply(msg)}
+              className="block px-2 py-1 hover:bg-gray-700"
+            >
+              Reply
+            </button>
+            <button
+              onClick={() => deleteMessage(msg._id)}
+              className="block px-2 py-1 hover:bg-gray-700"
+            >
+              Delete
+            </button>
           </div>
-        ))}
-        <div ref={scrollEnd}></div>
+        )}
+        {msg.senderId._id !== authUser._id && !msg.isDeleted && (
+          <div className="absolute left-0 top-0 hidden rounded bg-gray-800 text-xs text-white group-hover:block">
+            <button
+              onClick={() => handleReply(msg)}
+              className="block px-2 py-1 hover:bg-gray-700"
+            >
+              Reply
+            </button>
+          </div>
+        )}
       </div>
-
+      <div className="flex flex-col items-center text-center text-xs">
+        <img
+          src={
+            msg.senderId._id === authUser._id
+              ? authUser?.profilePic || assets.avatar_icon
+              : selectedUser?.profilePic || assets.avatar_icon
+          }
+          alt=""
+          className="h-6 w-6 sm:h-7 sm:w-7 rounded-full"
+        />
+        <p className="text-gray-400 mt-1">{formatMessageTime(msg.createdAt)}</p>
+      </div>
+    </div>
+  ))}
+  <div ref={scrollEnd}></div>
+</div>
       {/* Bottom Input Area */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3">
         <div className="flex flex-1 flex-col">
