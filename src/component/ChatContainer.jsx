@@ -11,7 +11,7 @@ const ChatContainer = () => {
 
   const scrollEnd = useRef();
   const [input, setInput] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyingTo, setReplyingTo] = useState(null); // Track message being replied to
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -154,55 +154,22 @@ const ChatContainer = () => {
               <button onClick={cancelReply} className='text-red-500 text-xs sm:text-sm'>Cancel</button>
             </div>
           )}
-          <div className="flex items-center bg-gray-100/12 px-2 sm:px-3 rounded-full">
-            {/* Input */}
+          <div className='flex items-center bg-gray-100/12 px-2 sm:px-3 rounded-full'>
             <input
               onChange={(e) => setInput(e.target.value)}
               value={input}
               onKeyDown={(e) => e.key === "Enter" ? handleSendMessage(e) : null}
               type="text"
-              placeholder={
-                selectedUser?.blocked
-                  ? "Cannot message a blocked user"
-                  : replyingTo
-                  ? "Type your reply..."
-                  : "Send a message"
-              }
-              className="flex-1 text-xs sm:text-sm p-2 sm:p-3 border-none rounded-lg outline-none text-white placeholder-gray-400"
+              placeholder={selectedUser?.blocked ? "Cannot message a blocked user" : replyingTo ? "Type your reply..." : "Send a message"}
+              className='flex-1 text-xs sm:text-sm p-2 sm:p-3 border-none rounded-lg outline-none text-white placeholder-gray-400'
               disabled={selectedUser?.blocked}
             />
-
-            {/* Hidden file input */}
-            <input
-              onChange={handleSendImage}
-              type="file"
-              id="image"
-              accept="image/png,image/jpeg"
-              hidden
-              disabled={selectedUser?.blocked}
-            />
-
-            {/* Image upload trigger */}
-            <label
-              htmlFor={typeof window !== "undefined" && !window.flutterImagePicker ? "image" : undefined}
-              onClick={() => {
-                if (typeof window !== "undefined" && typeof window.flutterImagePicker !== "undefined") {
-                  window.flutterImagePicker.postMessage("pickImage");
-                }
-              }}
-            >
-              <img
-                src={assets.gallery_icon}
-                alt="Upload"
-                className={`w-4 sm:w-5 mr-1 sm:mr-2 ${
-                  selectedUser?.blocked ? "opacity-50" : "cursor-pointer"
-                }`}
-              />
+            <input onChange={handleSendImage} type="file" id='image' accept='image/png,image/jpeg' hidden disabled={selectedUser?.blocked} />
+            <label htmlFor="image">
+              <img src={assets.gallery_icon} alt="" className={`w-4 sm:w-5 mr-1 sm:mr-2 ${selectedUser?.blocked ? 'opacity-50' : 'cursor-pointer'}`} />
             </label>
           </div>
         </div>
-
-        {/* Send Button */}
         <img
           onClick={handleSendMessage}
           src={assets.send_button}
