@@ -65,7 +65,7 @@ const ChatContainer = () => {
           {selectedUser.blocked && <span className="text-red-500 text-xs sm:text-sm">Blocked</span>}
         </p>
         <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className="md:hidden w-5 sm:w-7 cursor-pointer" />
-        <img src={assets.help_icon} alt="" className="max-md:hidden w-4 sm:w-5" />
+        
       </div>
 
       {/* Chat Messages */}
