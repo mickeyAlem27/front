@@ -11,24 +11,23 @@ const ResetPasswordPage = () => {
   const email = location.state?.email || ''; // Get email from state
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Fallback URL
-      const { data } = await axios.post(`${backendUrl}/api/users/reset-password`, {
-        email,
-        otp,
-        newPassword,
-      });
-      if (data.success) {
-        toast.success(data.message);
-        navigate('/login');
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
+  e.preventDefault();
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+    console.log('Sending request to:', `${backendUrl}/api/users/request-password-reset`);
+    const { data } = await axios.post(`${backendUrl}/api/users/request-password-reset`, { email });
+    console.log('Response:', data);
+    if (data.success) {
+      toast.success(data.message);
+      navigate('/reset-password', { state: { email } });
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    toast.error(error.message);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">

@@ -10,7 +10,8 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('/api/users/request-password-reset', { email });
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Fallback URL
+      const { data } = await axios.post(`${backendUrl}/api/users/request-password-reset`, { email });
       if (data.success) {
         toast.success(data.message);
         navigate('/reset-password', { state: { email } }); // Pass email to reset page
