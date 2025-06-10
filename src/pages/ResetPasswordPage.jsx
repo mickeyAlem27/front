@@ -13,7 +13,8 @@ const ResetPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('/api/users/reset-password', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Fallback URL
+      const { data } = await axios.post(`${backendUrl}/api/users/reset-password`, {
         email,
         otp,
         newPassword,
