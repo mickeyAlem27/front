@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
+import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -57,17 +58,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try {
-      localStorage.removeItem("token");
-      setAuthUser(null);
-      setOnlineUsers([]);
-      socket?.disconnect();
-      toast.success("Logged out successfully");
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
+  try {
+    localStorage.removeItem("token");
+    setAuthUser(null);
+    setOnlineUsers([]);
+    socket?.disconnect();
+    
+    toast.success("Logged out successfully", {
+      onClose: () => {
+        // Redirect after toast is closed
+        Navigate('/login')
+        
+        // OR if you're using React Router:
+        // navigate('/login');
+      }
+    });
+    
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
   const updateProfile = async ({ fullName, bio, profilePic }) => {
     try {
       const { data } = await axios.put(
