@@ -1,8 +1,8 @@
 import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
-import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
@@ -57,14 +58,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-   const logout = async () => {
+  const logout = async () => {
     try {
       localStorage.removeItem("token");
       setAuthUser(null);
       setOnlineUsers([]);
       socket?.disconnect();
       toast.success("Logged out successfully");
-      Navigate("/login");
+      navigate("/login");
     } catch (error) {
       toast.error(error.message);
     }
