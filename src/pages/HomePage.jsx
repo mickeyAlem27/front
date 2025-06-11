@@ -14,7 +14,7 @@ const HomePage = () => {
       : 'grid-cols-1 md:grid-cols-[1fr_1.5fr]';
 
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-y-auto">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">
       {/* Main container with viewport height and scrollable */}
       <div
         className={`

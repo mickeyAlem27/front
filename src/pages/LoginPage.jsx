@@ -31,7 +31,7 @@ const LoginPage = () => {
     script.async = true;
     document.body.appendChild(script)});
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-600 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">
       <div className="bg-[#1f1b38] bg-opacity-90 p-8 rounded-xl w-full max-w-md shadow-lg">
        <h2 className="text-3xl text-white font-semibold text-center mb-6">
           {isLogin ? "Login" : "Sign Up"}
