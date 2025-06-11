@@ -64,15 +64,8 @@ export const AuthProvider = ({ children }) => {
     setOnlineUsers([]);
     socket?.disconnect();
     
-    toast.success("Logged out successfully", {
-      onClose: () => {
-        // Redirect after toast is closed
-        Navigate('/login')
-        
-        // OR if you're using React Router:
-        // navigate('/login');
-      }
-    });
+    toast.success("Logged out successfully"),
+       Navigate('/login')
     
   } catch (error) {
     toast.error(error.message);
