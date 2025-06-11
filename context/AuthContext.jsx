@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
@@ -9,7 +10,8 @@ export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // New loading state
+  const navigate = useNavigate();
 
   const checkAuth = async () => {
     try {
@@ -18,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/check`, {
+      const { data } = await axios.get("/api/users/check", {
         headers: { token },
       });
       if (data.success) {
@@ -32,13 +34,13 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("token");
       setAuthUser(null);
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after check
     }
   };
 
   const login = async (type, { fullName, email, password, bio }) => {
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/${type}`, {
+      const { data } = await axios.post(`/api/users/${type}`, {
         fullName,
         email,
         password,
@@ -52,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(error.message);
     }
   };
 
@@ -63,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       setOnlineUsers([]);
       socket?.disconnect();
       toast.success("Logged out successfully");
+      navigate("/login");
     } catch (error) {
       toast.error(error.message);
     }
@@ -71,7 +74,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async ({ fullName, bio, profilePic }) => {
     try {
       const { data } = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/update-profile`,
+        "/api/users/update-profile",
         { fullName, bio, profilePic },
         { headers: { token: localStorage.getItem("token") } }
       );
@@ -114,7 +117,7 @@ export const AuthProvider = ({ children }) => {
     socket,
     onlineUsers,
     updateProfile,
-    loading,
+    loading, // Expose loading state
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
