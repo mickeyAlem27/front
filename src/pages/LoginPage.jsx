@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -24,11 +24,16 @@ const LoginPage = () => {
       toast.error(error.message);
     }
   };
-
+  // Load Jotform chatbot script dynamically
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jotfor.ms/agent/embedjs/019758665934714bb1c6833259ea4b35ee4f/embed.js?skipWelcome=1&maximizable=1';
+    script.async = true;
+    document.body.appendChild(script)});
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-600 p-6">
       <div className="bg-[#1f1b38] bg-opacity-90 p-8 rounded-xl w-full max-w-md shadow-lg">
-        <h2 className="text-3xl text-white font-semibold text-center mb-6">
+       <h2 className="text-3xl text-white font-semibold text-center mb-6">
           {isLogin ? "Login" : "Sign Up"}
         </h2>
         <form onSubmit={handleSubmit}>
@@ -84,6 +89,12 @@ const LoginPage = () => {
         </form>
         <p className="text-gray-300 text-center mt-4">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          
+           <div>
+         <p> <script
+  src='https://cdn.jotfor.ms/agent/embedjs/019758665934714bb1c6833259ea4b35ee4f/embed.js?skipWelcome=1&maximizable=1'>
+</script> </p>
+          </div>
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-violet-400 hover:underline"
@@ -100,7 +111,9 @@ const LoginPage = () => {
           </p>
         )}
       </div>
+      
     </div>
+    
   );
 };
 
