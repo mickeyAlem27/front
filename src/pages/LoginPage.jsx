@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react'; // Added useEffect for script loading
 import { AuthContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
@@ -10,42 +10,22 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
-  const [passwordError, setPasswordError] = useState('');
 
+  // Load Jotform chatbot script dynamically
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jotfor.ms/agent/embedjs/019758665934714bb1c6833259ea4b35ee4f/embed.js?skipWelcome=1&maximizable=1';
     script.async = true;
     document.body.appendChild(script);
 
+    // Cleanup script on component unmount
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
-  const validatePassword = (password) => {
-    const specialCharRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    if (!specialCharRegex.test(password)) {
-      return 'Password must contain at least one special character (e.g., !@#$%^&*)';
-    }
-    return '';
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isLogin) {
-      const error = validatePassword(password);
-      if (error) {
-        setPasswordError(error);
-        toast.error(error);
-        return;
-      }
-    }
-
     try {
       await login(isLogin ? 'login' : 'signup', {
         fullName,
@@ -53,10 +33,8 @@ const LoginPage = () => {
         password,
         bio,
       });
-      setPasswordError('');
-      toast.success(isLogin ? 'Logged in successfully!' : 'Signed up successfully! Check your email for a welcome message.');
+      toast.success(isLogin ? 'Logged in successfully!' : 'Signed up successfully!');
     } catch (error) {
-      setPasswordError('');
       toast.error(error.message);
     }
   };
@@ -96,18 +74,12 @@ const LoginPage = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setPasswordError('');
-              }}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className={`w-full p-3 rounded-full bg-[#3a3558] text-white placeholder-gray-400 outline-none ${passwordError ? 'border border-red-500' : ''}`}
+              className="w-full p-3 rounded-full bg-[#3a3558] text-white placeholder-gray-400 outline-none"
               required
               aria-label="Password"
             />
-            {passwordError && (
-              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
-            )}
           </div>
           {!isLogin && (
             <div className="mb-4">
@@ -148,6 +120,7 @@ const LoginPage = () => {
           </p>
         )}
       </div>
+      {/* Container for Jotform chatbot (optional, if script requires a target div) */}
       <div id="jotform-chatbot" className="fixed bottom-4 right-4 z-50"></div>
     </div>
   );
