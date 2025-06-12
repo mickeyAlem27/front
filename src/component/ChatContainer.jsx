@@ -30,6 +30,7 @@ const ChatContainer = () => {
     await sendMessage({ text: input.trim(), replyTo: replyingTo?._id });
     setInput("");
     setReplyingTo(null);
+    setIsUserScrolling(false); // Allow auto-scroll after sending a message
   };
 
   const handleSendImage = async (e) => {
@@ -47,6 +48,7 @@ const ChatContainer = () => {
       await sendMessage({ image: reader.result, replyTo: replyingTo?._id });
       setReplyingTo(null);
       e.target.value = "";
+      setIsUserScrolling(false); // Allow auto-scroll after sending an image
     };
     reader.readAsDataURL(file);
   };
@@ -70,7 +72,7 @@ const ChatContainer = () => {
     }
   };
 
-  // Detect manual scrolling to prevent auto-scroll
+  // Detect manual scrolling or touch to prevent auto-scroll
   useEffect(() => {
     const container = messageContainerRef.current;
     if (!container) return;
@@ -81,15 +83,23 @@ const ChatContainer = () => {
       setIsUserScrolling(!isAtBottom);
     };
 
+    const handleTouchStart = () => {
+      setIsUserScrolling(true);
+    };
+
     container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
+    container.addEventListener('touchstart', handleTouchStart);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('touchstart', handleTouchStart);
+    };
   }, []);
 
   // Fetch messages when user is selected
   useEffect(() => {
     if (selectedUser) {
       getMessages(selectedUser._id);
-      setIsUserScrolling(false); // Reset scrolling state
+      // Do not reset isUserScrolling here to prevent auto-scroll after interaction
     }
   }, [selectedUser, getMessages]);
 
@@ -114,110 +124,110 @@ const ChatContainer = () => {
       </div>
 
       {/* Scrollable Message Container */}
-  <div
-    ref={messageContainerRef}
-    className="flex flex-col h-[calc(100%-110px)] sm:h-[calc(100%-120px)] overflow-y-auto p-4 sm:p-6 pb-16 sm:pb-12 scroll-smooth"
-  >
-    {/* Dummy div for scrolling to the top */}
-    <div ref={scrollStart} />
-
-    {messages.map((msg) => (
       <div
-        key={msg._id}
-        className={`flex items-end gap-2 sm:gap-3 ${msg.senderId._id !== authUser._id ? 'flex-row-reverse' : 'justify-end'}`}
+        ref={messageContainerRef}
+        className="flex flex-col h-[calc(100%-110px)] sm:h-[calc(100%-120px)] overflow-y-auto p-4 sm:p-6 pb-16 sm:pb-12 scroll-smooth"
       >
-        <div className="relative group">
-          {msg.image ? (
-            <div className="flex flex-col">
-              <img
-                src={msg.image}
-                alt=""
-                className="max-w-[150px] sm:max-w-[200px] md:max-w-[230px] border border-gray-700 rounded-lg mb-2"
-              />
-              <div
-                className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
-                  msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                <span>{msg.seen ? 'Seen' : 'Send'}</span>
-                <img
-                  src={msg.seen ? doubleCheckIcon : singleCheckIcon}
-                  alt={msg.seen ? 'Seen' : 'Send'}
-                  className="w-4 h-4"
-                  onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col mb-8 sm:mb-10">
-              {msg.replyTo && (
-                <div className="bg-gray-700/50 p-2 sm:p-3 rounded-t-lg text-xs sm:text-sm text-gray-300">
-                  <p>
-                    Replying to {msg.replyTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}:
+        {/* Dummy div for scrolling to the top */}
+        <div ref={scrollStart} />
+
+        {messages.map((msg) => (
+          <div
+            key={msg._id}
+            className={`flex items-end gap-2 sm:gap-3 ${msg.senderId._id !== authUser._id ? 'flex-row-reverse' : 'justify-end'}`}
+          >
+            <div className="relative group">
+              {msg.image ? (
+                <div className="flex flex-col">
+                  <img
+                    src={msg.image}
+                    alt=""
+                    className="max-w-[150px] sm:max-w-[200px] md:max-w-[230px] border border-gray-700 rounded-lg mb-2"
+                  />
+                  <div
+                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <img
+                      src={msg.seen ? doubleCheckIcon : singleCheckIcon}
+                      alt={msg.seen ? 'Seen' : 'Send'}
+                      className="w-4 h-4"
+                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col mb-8 sm:mb-10">
+                  {msg.replyTo && (
+                    <div className="bg-gray-700/50 p-2 sm:p-3 rounded-t-lg text-xs sm:text-sm text-gray-300">
+                      <p>
+                        Replying to {msg.replyTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}:
+                      </p>
+                      {msg.replyTo.image ? (
+                        <img src={msg.replyTo.image} alt="" className="max-w-[100px] rounded mt-1" />
+                      ) : (
+                        <p className="truncate max-w-[200px]">{msg.replyTo.text}</p>
+                      )}
+                    </div>
+                  )}
+                  <p
+                    className={`p-3 max-w-[200px] sm:max-w-[250px] text-sm font-light rounded-lg break-all bg-violet-500/30 text-white 
+                      ${msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}
+                  >
+                    {msg.text}
                   </p>
-                  {msg.replyTo.image ? (
-                    <img src={msg.replyTo.image} alt="" className="max-w-[100px] rounded mt-1" />
-                  ) : (
-                    <p className="truncate max-w-[200px]">{msg.replyTo.text}</p>
+                  <div
+                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <img
+                      src={msg.seen ? doubleCheckIcon : singleCheckIcon}
+                      alt={msg.seen ? 'Seen' : 'Send'}
+                      className="w-4 h-4"
+                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!msg.isDeleted && (
+                <div
+                  className={`absolute top-0 ${
+                    msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
+                  } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block`}
+                >
+                  <button onClick={() => handleReply(msg)} className="block px-3 py-1 hover:bg-gray-700">
+                    Reply
+                  </button>
+                  {msg.senderId._id === authUser._id && (
+                    <button onClick={() => deleteMessage(msg._id)} className="block px-3 py-1 hover:bg-gray-700">
+                      Delete
+                    </button>
                   )}
                 </div>
               )}
-              <p
-                className={`p-3 max-w-[200px] sm:max-w-[250px] text-sm font-light rounded-lg break-all bg-violet-500/30 text-white 
-                  ${msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}
-              >
-                {msg.text}
-              </p>
-              <div
-                className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
-                  msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                <span>{msg.seen ? 'Seen' : 'Send'}</span>
-                <img
-                  src={msg.seen ? doubleCheckIcon : singleCheckIcon}
-                  alt={msg.seen ? 'Seen' : 'Send'}
-                  className="w-4 h-4"
-                  onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
-                />
-              </div>
             </div>
-          )}
 
-          {!msg.isDeleted && (
-            <div
-              className={`absolute top-0 ${
-                msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
-              } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block`}
-            >
-              <button onClick={() => handleReply(msg)} className="block px-3 py-1 hover:bg-gray-700">
-                Reply
-              </button>
-              {msg.senderId._id === authUser._id && (
-                <button onClick={() => deleteMessage(msg._id)} className="block px-3 py-1 hover:bg-gray-700">
-                  Delete
-                </button>
-              )}
+            <div className="text-center text-xs sm:text-sm">
+              <img
+                src={
+                  msg.senderId._id === authUser._id
+                    ? authUser?.profilePic || assets.avatar_icon
+                    : selectedUser?.profilePic || assets.avatar_icon
+                }
+                alt=""
+                className="w-6 sm:w-7 rounded-full"
+              />
+              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
             </div>
-          )}
-        </div>
-
-        <div className="text-center text-xs sm:text-sm">
-          <img
-            src={
-              msg.senderId._id === authUser._id
-                ? authUser?.profilePic || assets.avatar_icon
-                : selectedUser?.profilePic || assets.avatar_icon
-            }
-            alt=""
-            className="w-6 sm:w-7 rounded-full"
-          />
-          <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
-        </div>
+          </div>
+        ))}
+        <div ref={scrollEnd}></div>
       </div>
-    ))}
-    <div ref={scrollEnd}></div>
-  </div>
 
       {/* Scroll Control Buttons */}
       <div className="absolute bottom-20 right-4 flex flex-col gap-2">
