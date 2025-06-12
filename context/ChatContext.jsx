@@ -43,26 +43,18 @@ export const ChatProvider = ({ children }) => {
   }, 1000);
 
   const searchUsers = async (query) => {
-    try {
-      if (!query) return [];
-      console.log("Searching users with query:", query);
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/search?query=${encodeURIComponent(query)}`,
-        { headers: { token: localStorage.getItem("token") } }
-      );
-      console.log("Search response:", data);
-      if (data.success) {
-        return data.users;
-      } else {
-        toast.error(data.message);
-        return [];
-      }
-    } catch (error) {
-      console.error("Search users error:", error.response?.status, error.message);
-      toast.error("Failed to search users");
-      return [];
-    }
-  };
+  if (!query) return [];
+  const { data } = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/api/users/search?query=${encodeURIComponent(query)}`,
+    { headers: { token: localStorage.getItem("token") } }
+  );
+  if (data.success) {
+    return data.users;
+  } else {
+    toast.error(data.message);
+    return [];
+  }
+};
 
   const addContact = async (contactId) => {
     try {
@@ -78,6 +70,7 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error adding contact:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -100,6 +93,7 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error removing contact:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -121,6 +115,7 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error blocking user:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -142,6 +137,7 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error unblocking user:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -154,21 +150,29 @@ export const ChatProvider = ({ children }) => {
       );
       if (data.success) {
         setMessages(data.messages);
-        data.messages.forEach(async (msg) => {
+        for (const msg of data.messages) {
           if (!msg.seen && msg.senderId._id !== authUser._id) {
-            await axios.put(
-              `${import.meta.env.VITE_BACKEND_URL}/api/messages/mark/${msg._id}`,
-              {},
-              { headers: { token: localStorage.getItem("token") } }
-            );
+            try {
+              await axios.put(
+                `${import.meta.env.VITE_BACKEND_URL}/api/messages/mark/${msg._id}`,
+                {},
+                { headers: { token: localStorage.getItem("token") } }
+              );
+              console.log(`Marked message ${msg._id} as seen`);
+            } catch (error) {
+              console.error(`Failed to mark message ${msg._id} as seen:`, error.response?.data || error.message);
+            }
           }
-        });
+        }
         setUnseenMessages((prev) => ({
           ...prev,
           [userId]: 0,
         }));
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error fetching messages:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -186,6 +190,7 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error sending message:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -203,21 +208,28 @@ export const ChatProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error("Error deleting message:", error);
       toast.error(error.response?.data?.message || error.message);
     }
   };
 
   const subscribeToMessages = () => {
-    if (!socket) return;
+    if (!socket) {
+      console.warn("Socket not initialized");
+      return;
+    }
 
     socket.on("newMessage", ({ message, senderId, receiverId }) => {
+      console.log("Received newMessage:", message._id, "from", senderId);
       if (selectedUser && senderId === selectedUser._id && receiverId === authUser._id) {
         setMessages((prevMessages) => [...prevMessages, message]);
         axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/api/messages/mark/${message._id}`,
           {},
           { headers: { token: localStorage.getItem("token") } }
-        );
+        )
+          .then(() => console.log(`Marked new message ${message._id} as seen`))
+          .catch((error) => console.error("Error marking new message as seen:", error));
         setUnseenMessages((prev) => ({
           ...prev,
           [senderId]: 0,
@@ -227,12 +239,20 @@ export const ChatProvider = ({ children }) => {
         const sender = users.find((user) => user._id === senderId);
         toast(`${sender?.fullName || "Someone"} sent you a message`, {
           icon: "💬",
-          style: { background: "#282142", color: "#fff" },
+          style: { background: "#282446", color: "white" },
         });
       }
     });
 
+    socket.on("messageSeen", (updatedMessage) => {
+      console.log("Received messageSeen:", updatedMessage._id, "seen:", updatedMessage.seen);
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => (msg._id === updatedMessage._id ? updatedMessage : msg))
+      );
+    });
+
     socket.on("messageDeleted", (messageId) => {
+      console.log("Received messageDeleted:", messageId);
       setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== messageId));
     });
   };
@@ -240,6 +260,7 @@ export const ChatProvider = ({ children }) => {
   const unsubscribeFromMessages = () => {
     if (socket) {
       socket.off("newMessage");
+      socket.off("messageSeen");
       socket.off("messageDeleted");
     }
   };
@@ -254,9 +275,12 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     if (socket) {
       subscribeToMessages();
-      socket.on("connect", fetchUnseenMessages);
+      socket.on("connect", () => {
+        console.log("Socket connected");
+        fetchUnseenMessages();
+      });
       return () => {
-        socket.off("connect", fetchUnseenMessages);
+        socket.off("connect");
         unsubscribeFromMessages();
       };
     }

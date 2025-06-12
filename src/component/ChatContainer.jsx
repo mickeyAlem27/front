@@ -5,6 +5,10 @@ import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 
+// Placeholder SVG icons (base64) for single and double checkmarks
+const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+
 const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
@@ -53,11 +57,14 @@ const ChatContainer = () => {
     }
   }, [selectedUser, getMessages]);
 
+  useEffect(() => {
+    scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return selectedUser ? (
     <div className="h-full overflow-y-auto relative backdrop-blur-lg">
-      
       {/* Header */}
-      <div className="flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-2 sm:px-4 border-b border-stone-500">
+      <div className="flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-4 sm:px-6 border-b border-stone-500">
         <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-6 sm:w-8 rounded-full" />
         <p className="flex-1 text-base sm:text-lg text-white flex items-center gap-1 sm:gap-2">
           {selectedUser.fullName}
@@ -65,27 +72,41 @@ const ChatContainer = () => {
           {selectedUser.blocked && <span className="text-red-500 text-xs sm:text-sm">Blocked</span>}
         </p>
         <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className="md:hidden w-5 sm:w-7 cursor-pointer" />
-        
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-col h-[calc(100%-110px)] sm:h-[calc(100%-120px)] overflow-y-auto p-2 sm:p-3 pb-4 sm:pb-6">
-        {messages.map((msg, index) => (
+      <div className="flex flex-col h-[calc(100%-110px)] sm:h-[calc(100%-120px)] overflow-y-auto p-4 sm:p-6 pb-16 sm:pb-12 scroll-smooth">
+        {messages.map((msg) => (
           <div
-            key={index}
-            className={`flex items-end gap-1 sm:gap-2 justify-end ${msg.senderId._id !== authUser._id ? 'flex-row-reverse' : ''}`}
+            key={msg._id}
+            className={`flex items-end gap-2 sm:gap-3 ${msg.senderId._id !== authUser._id ? 'flex-row-reverse' : 'justify-end'}`}
           >
             <div className="relative group">
               {msg.image ? (
-                <img
-                  src={msg.image}
-                  alt=""
-                  className="max-w-[150px] sm:max-w-[200px] md:max-w-[230px] border border-gray-700 rounded-lg mb-6 sm:mb-8"
-                />
+                <div className="flex flex-col">
+                  <img
+                    src={msg.image}
+                    alt=""
+                    className="max-w-[150px] sm:max-w-[200px] md:max-w-[230px] border border-gray-700 rounded-lg mb-2"
+                  />
+                  <div
+                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <img
+                      src={msg.seen ? doubleCheckIcon : singleCheckIcon}
+                      alt={msg.seen ? 'Seen' : 'Send'}
+                      className="w-4 h-4"
+                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                    />
+                  </div>
+                </div>
               ) : (
-                <div className="mb-6 sm:mb-8">
+                <div className="flex flex-col mb-8 sm:mb-10">
                   {msg.replyTo && (
-                    <div className="bg-gray-700/50 p-1 sm:p-2 rounded-t-lg text-xs sm:text-sm text-gray-300">
+                    <div className="bg-gray-700/50 p-2 sm:p-3 rounded-t-lg text-xs sm:text-sm text-gray-300">
                       <p>
                         Replying to {msg.replyTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}:
                       </p>
@@ -96,25 +117,46 @@ const ChatContainer = () => {
                       )}
                     </div>
                   )}
-                  <p className={`p-2 max-w-[200px] text-sm font-light rounded-lg break-all bg-violet-500/30 text-white 
-                    ${msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>
+                  <p
+                    className={`p-3 max-w-[200px] sm:max-w-[250px] text-sm font-light rounded-lg break-all bg-violet-500/30 text-white 
+                      ${msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}
+                  >
                     {msg.text}
                   </p>
+                  <div
+                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <img
+                      src={msg.seen ? doubleCheckIcon : singleCheckIcon}
+                      alt={msg.seen ? 'Seen' : 'Send'}
+                      className="w-4 h-4"
+                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                    />
+                  </div>
                 </div>
               )}
 
-              {/* Hover Controls */}
               {!msg.isDeleted && (
-                <div className={`absolute top-0 ${msg.senderId._id === authUser._id ? 'right-0' : 'left-0'} bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block`}>
-                  <button onClick={() => handleReply(msg)} className="block px-2 py-1 hover:bg-gray-700">Reply</button>
+                <div
+                  className={`absolute top-0 ${
+                    msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
+                  } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block`}
+                >
+                  <button onClick={() => handleReply(msg)} className="block px-3 py-1 hover:bg-gray-700">
+                    Reply
+                  </button>
                   {msg.senderId._id === authUser._id && (
-                    <button onClick={() => deleteMessage(msg._id)} className="block px-2 py-1 hover:bg-gray-700">Delete</button>
+                    <button onClick={() => deleteMessage(msg._id)} className="block px-3 py-1 hover:bg-gray-700">
+                      Delete
+                    </button>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Avatar & Timestamp */}
             <div className="text-center text-xs sm:text-sm">
               <img
                 src={
@@ -132,11 +174,10 @@ const ChatContainer = () => {
         <div ref={scrollEnd}></div>
       </div>
 
-      {/* Message Input */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-2 sm:gap-3 p-2 sm:p-3">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
         <div className="flex-1 flex flex-col">
           {replyingTo && (
-            <div className="bg-gray-700/50 p-2 rounded-t-lg text-sm text-gray-300 flex items-center">
+            <div className="bg-gray-700/50 p-3 rounded-t-lg text-sm text-gray-300 flex items-center">
               <p className="flex-1 truncate">
                 Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
               </p>
@@ -144,7 +185,7 @@ const ChatContainer = () => {
             </div>
           )}
 
-          <div className="flex items-center bg-gray-100/12 px-3 rounded-full">
+          <div className="flex items-center bg-gray-100/12 px-4 rounded-full">
             <input
               type="text"
               value={input}
