@@ -51,6 +51,13 @@ const Sidebar = () => {
     setSelectedUser(user);
   };
 
+  // Sort users by lastMessageTime (descending, most recent first)
+  const sortedUsers = [...users].sort((a, b) => {
+    const timeA = a.lastMessageTime ? new Date(a.lastMessageTime).getTime() : 0;
+    const timeB = b.lastMessageTime ? new Date(b.lastMessageTime).getTime() : 0;
+    return timeB - timeA; // Most recent first
+  });
+
   return (
     <div className="bg-[#282142]/80 p-2 sm:p-3 flex flex-col h-full min-w-[180px] sm:min-w-[200px] md:min-w-[240px]">
       <div className="flex items-center justify-between mb-2 sm:mb-3">
@@ -100,11 +107,11 @@ const Sidebar = () => {
       )}
       <div className="flex-1 overflow-y-auto">
         <h3 className="text-gray-300 text-xs sm:text-sm mb-1 sm:mb-2">Your Contacts</h3>
-        {users.length === 0 ? (
+        {sortedUsers.length === 0 ? (
           <p className="text-gray-400 text-xs sm:text-sm">No contacts available</p>
         ) : (
           <ul className="space-y-1 sm:space-y-2">
-            {users.map((user) => (
+            {sortedUsers.map((user) => (
               <li
                 key={user._id}
                 onClick={() => handleSelectUser(user)}

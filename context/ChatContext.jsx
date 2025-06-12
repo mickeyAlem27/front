@@ -19,7 +19,26 @@ export const ChatProvider = ({ children }) => {
         headers: { token: localStorage.getItem("token") },
       });
       if (data.success) {
-        setUsers(data.users);
+        // Map users to include lastMessageTime
+        const usersWithLastMessageTime = await Promise.all(
+          data.users.map(async (user) => {
+            try {
+              const { data: messageData } = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/api/messages/${user._id}`,
+                { headers: { token: localStorage.getItem("token") } }
+              );
+              if (messageData.success && messageData.messages.length > 0) {
+                const lastMessage = messageData.messages[messageData.messages.length - 1];
+                return { ...user, lastMessageTime: lastMessage.createdAt };
+              }
+              return { ...user, lastMessageTime: null };
+            } catch (error) {
+              console.error(`Error fetching messages for user ${user._id}:`, error);
+              return { ...user, lastMessageTime: null };
+            }
+          })
+        );
+        setUsers(usersWithLastMessageTime);
         setUnseenMessages(data.unseenMessages);
       } else {
         toast.error(data.message);
@@ -43,18 +62,23 @@ export const ChatProvider = ({ children }) => {
   }, 1000);
 
   const searchUsers = async (query) => {
-  if (!query) return [];
-  const { data } = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/api/users/search?query=${encodeURIComponent(query)}`,
-    { headers: { token: localStorage.getItem("token") } }
-  );
-  if (data.success) {
-    return data.users;
-  } else {
-    toast.error(data.message);
-    return [];
-  }
-};
+    if (!query) return [];
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/search?query=${encodeURIComponent(query)}`,
+        { headers: { token: localStorage.getItem("token") } }
+      );
+      if (data.success) {
+        return data.users;
+      } else {
+        toast.error(data.message);
+        return [];
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to search users");
+      return [];
+    }
+  };
 
   const addContact = async (contactId) => {
     try {
@@ -241,6 +265,12 @@ export const ChatProvider = ({ children }) => {
           icon: "💬",
           style: { background: "#282446", color: "white" },
         });
+        // Update lastMessageTime for the sender
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === senderId ? { ...user, lastMessageTime: message.createdAt } : user
+          )
+        );
       }
     });
 
