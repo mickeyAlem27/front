@@ -10,43 +10,38 @@ import { AuthContext } from '../context/AuthContext';
 import First from './pages/First';
 
 const App = () => {
-  const { isAuthenticated, loading } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
-    );
-  }
+  
 
   return (
-    <div>
+    <div >
       <Toaster />
       <Routes>
         <Route path="/" element={<First />} />
         <Route path="/first" element={<First />} />
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />}
+          element={authUser ? <Navigate to="/home" /> : <LoginPage />}
         />
         <Route
           path="/home"
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" replace />}
+          element={<HomePage />}
         />
         <Route
           path="/profile"
-          element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />}
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/forgot-password"
-          element={isAuthenticated ? <Navigate to="/home" replace /> : <ForgotPasswordPage />}
+          element={authUser ? <Navigate to="/" /> : <ForgotPasswordPage />}
         />
         <Route
           path="/reset-password"
-          element={isAuthenticated ? <Navigate to="/home" replace /> : <ResetPasswordPage />}
+          element={authUser ? <Navigate to="/" /> : <ResetPasswordPage />}
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Fallback route for unmatched paths */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );
