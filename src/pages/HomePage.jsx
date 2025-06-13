@@ -23,7 +23,7 @@ const HomePage = () => {
           </div>
 
           {/* Chat Container - Responsive in both directions */}
-          <div className="h-full min-w-0 overflow-x-hidden overflow-y-auto">
+          <div className="h-full min-w-0 overflow-x- overflow-y-auto">
             <ChatContainer />
           </div>
 
