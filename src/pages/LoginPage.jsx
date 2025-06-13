@@ -16,8 +16,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Redirect if already authenticated
     if (isAuthenticated) {
       navigate('/home', { replace: true });
     }
@@ -35,8 +33,7 @@ const LoginPage = () => {
       });
       
       if (success) {
-        toast.success(isLogin ? 'Logged in successfully!' : 'Signed up successfully!');
-        navigate('/home', { replace: true });
+        // AuthContext will trigger the redirection through the isAuthenticated change
       }
     } catch (error) {
       toast.error(error.message);
@@ -52,12 +49,11 @@ const LoginPage = () => {
         <div className="absolute inset-0 bg-gray-900/80 z-50 flex items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="relative w-20 h-20 mb-4">
-              {/* Animated rhombus loader */}
               <div className="absolute inset-0 border-4 border-t-violet-500 border-r-indigo-500 border-b-purple-500 border-l-blue-500 rounded-full animate-spin"></div>
               <div className="absolute inset-2 border-4 border-t-violet-400 border-r-indigo-400 border-b-purple-400 border-l-blue-400 rounded-full animate-spin-reverse"></div>
               <div className="absolute inset-4 border-4 border-t-violet-300 border-r-indigo-300 border-b-purple-300 border-l-blue-300 rounded-full animate-spin"></div>
             </div>
-            <p className="text-white font-medium">Welcome back!</p>
+            <p className="text-white font-medium">Authenticating...</p>
           </div>
         </div>
       )}

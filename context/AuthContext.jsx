@@ -50,11 +50,14 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", data.token);
         setAuthUser(data.userData);
         toast.success(data.message);
+        return true; // Return success status
       } else {
         toast.error(data.message);
+        return false;
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+      return false;
     }
   };
 
@@ -65,11 +68,12 @@ export const AuthProvider = ({ children }) => {
       setOnlineUsers([]);
       socket?.disconnect();
       toast.success("Logged out successfully");
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (error) {
       toast.error(error.message);
     }
   };
+
 
   const updateProfile = async ({ fullName, bio, profilePic }) => {
     try {
@@ -110,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [authUser]);
 
-  const value = {
+   const value = {
     authUser,
     login,
     logout,
@@ -118,6 +122,7 @@ export const AuthProvider = ({ children }) => {
     onlineUsers,
     updateProfile,
     loading,
+    isAuthenticated: !!authUser, // Add explicit isAuthenticated flag
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
