@@ -111,7 +111,7 @@ const ChatContainer = () => {
   }, [messages, isUserScrolling]);
 
   return selectedUser ? (
-    <div className="h-full overflow-y-auto relative backdrop-blur-lg">
+    <div className="h-full overflow-y-auto overflow-x-auto relative backdrop-blur-lg">
       {/* Header */}
       <div className="flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-4 sm:px-6 border-b border-stone-500">
         <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-6 sm:w-8 rounded-full" />
