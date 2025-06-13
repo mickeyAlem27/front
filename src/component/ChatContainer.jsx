@@ -303,19 +303,19 @@ const ChatContainer = () => {
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px]">
-      <video
-        src={assets.Message}
-        className="max-w-[200px] md:max-w-[250px] rounded-lg"
-        autoPlay
-        loop
-        muted
-        onError={(e) => console.error('Video failed to load:', e)}
-      >
-        <source src={assets.Sample} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <p className="text-lg font-medium text-white">Feel free to chat</p>
-    </div>
+  <video
+    src={assets.Message}
+    className="max-w-[200px] md:max-w-[250px] rounded-lg mx-auto"
+    autoPlay
+    loop
+    muted
+    onError={(e) => console.error('Video failed to load:', e)}
+  >
+    <source src={assets.Sample} type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <p className="text-lg font-medium text-white text-center">Feel free to chat</p>
+</div>
   );
 };
 

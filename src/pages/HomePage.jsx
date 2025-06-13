@@ -8,12 +8,12 @@ const HomePage = () => {
   const { selectedUser } = useContext(ChatContext);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-2 sm:p-4">
       <div
-        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] grid grid-cols-1 relative ${
+        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] w-full max-w-[1800px] grid grid-cols-1 relative transition-all duration-300 ${
           selectedUser
-            ? 'md:grid-cols-[1fr_1.5fr_1fr] xl:grid-cols-[1fr_2fr_1fr]'
-            : 'md:grid-cols-2'
+            ? 'md:grid-cols-[0.8fr_2fr_0.8fr] lg:grid-cols-[0.7fr_2.5fr_0.7fr] xl:grid-cols-[0.6fr_3fr_0.6fr]'
+            : 'md:grid-cols-[0.8fr_2fr] lg:grid-cols-[0.7fr_3fr]'
         }`}
       >
         <div className="overflow-y-auto md:overflow-y-hidden">
@@ -22,9 +22,11 @@ const HomePage = () => {
         <div className="h-full">
           <ChatContainer />
         </div>
-        <div className="hidden md:block overflow-y-auto">
-          <RightSidebar />
-        </div>
+        {selectedUser && (
+          <div className="hidden md:block overflow-y-auto">
+            <RightSidebar />
+          </div>
+        )}
       </div>
     </div>
   );
