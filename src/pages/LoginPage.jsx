@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
-  const { login } = useContext(AuthContext);
+  const { login, isAuthenticated } = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,26 +16,31 @@ const LoginPage = () => {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    
+    // Redirect if already authenticated
+    if (isAuthenticated) {
+      navigate('/home', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(isLogin ? 'login' : 'signup', {
+      const success = await login(isLogin ? 'login' : 'signup', {
         fullName,
         email,
         password,
         bio,
       });
-      toast.success(isLogin ? 'Logged in successfully!' : 'Signed up successfully!');
       
-      // Simulate a brief delay before redirect
-      setTimeout(() => {
-        navigate('/dashboard'); // Change this to your desired redirect path
-      }, 1500);
+      if (success) {
+        toast.success(isLogin ? 'Logged in successfully!' : 'Signed up successfully!');
+        navigate('/home', { replace: true });
+      }
     } catch (error) {
       toast.error(error.message);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -52,7 +57,7 @@ const LoginPage = () => {
               <div className="absolute inset-2 border-4 border-t-violet-400 border-r-indigo-400 border-b-purple-400 border-l-blue-400 rounded-full animate-spin-reverse"></div>
               <div className="absolute inset-4 border-4 border-t-violet-300 border-r-indigo-300 border-b-purple-300 border-l-blue-300 rounded-full animate-spin"></div>
             </div>
-            <p className="text-white font-medium">Redirecting you...</p>
+            <p className="text-white font-medium">Welcome back!</p>
           </div>
         </div>
       )}
