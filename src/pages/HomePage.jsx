@@ -10,21 +10,23 @@ const HomePage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">
       <div
-        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] grid grid-cols-1 relative ${
+        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] flex relative ${
           selectedUser
-            ? 'md:grid-cols-[1fr_1.5fr_1fr] xl:grid-cols-[1fr_2fr_1fr]'
-            : 'md:grid-cols-2'
+            ? 'md:flex-row xl:flex-row'
+            : 'md:flex-row'
         }`}
       >
-        <div >
+        <div className="h-full overflow-y-auto flex-shrink-0 md:w-1/4 xl:w-1/5">
           <Sidebar />
         </div>
-        <div >
+        <div className="h-full overflow-y-auto flex-grow md:w-2/4 xl:w-3/5">
           <ChatContainer />
         </div>
-        <div >
-          <RightSidebar />
-        </div>
+        {selectedUser && (
+          <div className="h-full overflow-y-auto flex-shrink-0 md:w-1/4 xl:w-1/5">
+            <RightSidebar />
+          </div>
+        )}
       </div>
     </div>
   );
