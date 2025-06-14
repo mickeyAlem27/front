@@ -16,13 +16,13 @@ const HomePage = () => {
             : 'md:grid-cols-2'
         }`}
       >
-        <div className="overflow-y-auto md:overflow-y-hidden">
+        <div >
           <Sidebar />
         </div>
-        <div className="h-full">
+        <div >
           <ChatContainer />
         </div>
-        <div className="hidden md:block overflow-y-auto">
+        <div >
           <RightSidebar />
         </div>
       </div>
