@@ -304,10 +304,10 @@ const ChatContainer = () => {
       </div>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px]">
+   <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px] h-full">
       <video
         src={assets.Message}
-        className="max-w-[200px] md:max-w-[250px] rounded-lg mx-auto"
+        className="max-h-[200px] sm:max-h-[250px] md:max-h-[300px] w-auto rounded-lg mx-auto"
         autoPlay
         loop
         muted
