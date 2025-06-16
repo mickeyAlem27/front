@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
-const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
 const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
@@ -135,9 +135,21 @@ const ChatContainer = () => {
           <div
             key={msg._id}
             className={`flex items-end gap-2 sm:gap-3 mb-4 ${
-              msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+              msg.senderId._id === authUser._id ? 'justify-end flex-row-reverse' : 'justify-start flex-row'
             }`}
           >
+            <div className="text-center text-xs sm:text-sm">
+              <img
+                src={
+                  msg.senderId._id === authUser._id
+                    ? authUser?.profilePic || assets.avatar_icon
+                    : selectedUser?.profilePic || assets.avatar_icon
+                }
+                alt=""
+                className="w-6 sm:w-7 rounded-full"
+              />
+              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
+            </div>
             <div className="relative group">
               {msg.image ? (
                 <div className="flex flex-col">
@@ -212,19 +224,6 @@ const ChatContainer = () => {
                   )}
                 </div>
               )}
-            </div>
-
-            <div className="text-center text-xs sm:text-sm">
-              <img
-                src={
-                  msg.senderId._id === authUser._id
-                    ? authUser?.profilePic || assets.avatar_icon
-                    : selectedUser?.profilePic || assets.avatar_icon
-                }
-                alt=""
-                className="w-6 sm:w-7 rounded-full"
-              />
-              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
             </div>
           </div>
         ))}
@@ -304,7 +303,7 @@ const ChatContainer = () => {
       </div>
     </div>
   ) : (
-   <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px] h-full">
+    <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px] h-full">
       <video
         src={assets.Message}
         className="max-h-[200px] sm:max-h-[250px] md:max-h-[300px] w-auto rounded-lg mx-auto"
