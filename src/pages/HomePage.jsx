@@ -8,25 +8,23 @@ const HomePage = () => {
   const { selectedUser } = useContext(ChatContext);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-contain p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/bgImage.svg')] bg-cover bg-center p-2 sm:p-4">
       <div
-        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] flex relative ${
+        className={`backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden h-[90vh] w-full max-w-[96rem] grid relative ${
           selectedUser
-            ? 'md:flex-row xl:flex-row'
-            : 'md:flex-row'
+            ? 'grid-cols-1 sm:grid-cols-[250px_1fr] lg:grid-cols-[280px_1.5fr_280px] xl:grid-cols-[300px_2fr_300px]'
+            : 'grid-cols-1 sm:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr]'
         }`}
       >
-        <div className="h-full overflow-y-auto flex-shrink-0 md:w-1/4 xl:w-1/5">
+        <div className="overflow-y-auto sm:overflow-y-hidden">
           <Sidebar />
         </div>
-        <div className="h-full overflow-y-auto flex-grow md:w-2/4 xl:w-3/5">
+        <div className="h-full">
           <ChatContainer />
         </div>
-        {selectedUser && (
-          <div className="h-full overflow-y-auto flex-shrink-0 md:w-1/4 xl:w-1/5">
-            <RightSidebar />
-          </div>
-        )}
+        <div className={`${selectedUser ? 'block' : 'hidden'} sm:block overflow-y-auto`}>
+          <RightSidebar />
+        </div>
       </div>
     </div>
   );
