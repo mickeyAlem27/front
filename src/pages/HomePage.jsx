@@ -16,13 +16,13 @@ const HomePage = () => {
             : 'grid-cols-[200px_1fr] sm:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr]'
         }`}
       >
-        <div className="h-full overflow-y-auto flex-shrink-0">
+        <div className="h-full overflow-y-auto flex-shrink-0 min-w-[200px] sm:min-w-[250px] lg:min-w-[280px]">
           <Sidebar />
         </div>
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto min-w-0">
           <ChatContainer />
         </div>
-        <div className={`${selectedUser ? 'block' : 'hidden'} h-full overflow-y-auto flex-shrink-0`}>
+        <div className={`${selectedUser ? 'block' : 'hidden'} h-full overflow-y-auto flex-shrink-0 min-w-[200px] sm:min-w-[250px] lg:min-w-[280px]`}>
           <RightSidebar />
         </div>
       </div>
