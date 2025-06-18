@@ -389,12 +389,12 @@ const First = () => {
       <div className="pt-24 relative z-10">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[250px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
+          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
-          <div className="relative z-10 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+          <div className="relative z-20 text-center text-white max-w-4xl px-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
             <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
@@ -411,12 +411,12 @@ const First = () => {
 
         {/* Second Hero Section */}
         <div 
-          className="relative min-h-[400px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
+          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
           style={{ backgroundImage: `url(${assets.webfront2})` }}
         >
           <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
             <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
@@ -444,9 +444,9 @@ const First = () => {
       <div className="py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-         <p className="text-xl md:text-2xl lg:text-3xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s">
-  Join thousands of happy users communicating effortlessly with ChatApp.
-</p>
+          <p className="text-3xl md:text-4xl lg:text-5xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s content">
+            Join thousands of happy users communicating effortlessly with ChatApp.
+          </p>
           <Link
             to="/login"
             className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl content"
