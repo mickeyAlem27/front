@@ -148,12 +148,18 @@ const First = () => {
       if (window.jfAgent && typeof window.jfAgent.toggle === 'function') {
         window.jfAgent.toggle();
       } else {
-        // Fallback: Toggle chatbot visibility by querying DOM
-        const chatbot = document.querySelector('#jf-agent, .jf-agent');
+        // Fallback: Find and toggle chatbot widget
+        const chatbot = document.querySelector('#jf-agent, .jf-agent, [id*="jotform"], [class*="jotform"]');
         if (chatbot) {
-          chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+          const isHidden = chatbot.style.display === 'none' || getComputedStyle(chatbot).display === 'none';
+          chatbot.style.display = isHidden ? 'block' : 'none';
+          // Ensure chatbot is positioned correctly for popup effect
+          chatbot.style.position = chatbot.style.position || 'fixed';
+          chatbot.style.bottom = chatbot.style.bottom || '20px';
+          chatbot.style.right = chatbot.style.right || '20px';
+          chatbot.style.zIndex = chatbot.style.zIndex || '1000';
         } else {
-          console.warn('Jotform chatbot not found. Ensure the script is loaded correctly.');
+          console.warn('Jotform chatbot not found. Ensure the script is loaded and the widget is rendered.');
         }
       }
     } catch (error) {
@@ -167,7 +173,7 @@ const First = () => {
       <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-white shadow-sm z-50 backdrop-blur-sm bg-opacity-80 animate__animated animate__fadeInDown">
         <div className="flex space-x-2">
           <button
-            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg animate__animated animate__pulse animate__infinite animate__slow"
+            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg animate__animated animate__pulse animate__infinite animate__slow text-lg"
             aria-label="ChatApp Section"
           >
             ChatApp
@@ -176,7 +182,7 @@ const First = () => {
           {/* Feature Dropdown with proper z-index hierarchy */}
           <div className="relative group z-40">
             <button
-              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center animate__animated animate__fadeIn"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center animate__animated animate__fadeIn text-lg"
               aria-label="Feature Section"
             >
               Features
@@ -186,19 +192,19 @@ const First = () => {
             </button>
             <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-50 border border-gray-100 overflow-hidden">
               <ul className="py-2">
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base">
                   <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                   Real-Time Messaging
                 </li>
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base">
                   <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   Multi-Media
                 </li>
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base">
                   <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -209,7 +215,7 @@ const First = () => {
           </div>
           
           <button
-            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 animate__animated animate__fadeIn"
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 animate__animated animate__fadeIn text-lg"
             aria-label="About Section"
           >
             About
@@ -218,7 +224,7 @@ const First = () => {
         
         <Link to="/login">
           <button
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center animate__animated animate__pulse animate__infinite animate__slow"
+            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center animate__animated animate__pulse animate__infinite animate__slow text-lg"
             aria-label="Login to ChatApp"
           >
             Login
@@ -238,15 +244,15 @@ const First = () => {
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-6xl md:text-6xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
-            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-2xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
               Experience seamless real-time messaging with friends and colleagues. Share moments, exchange ideas, and stay connected like never before.
             </p>
             <Link
               to="/login"
-              className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow content"
+              className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg content"
             >
               Start Chatting Now
             </Link>
@@ -260,22 +266,22 @@ const First = () => {
         >
           <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-6xl md:text-6xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
-            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-2xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
               Share photos, videos, and files effortlessly. Customize your profile and make every conversation uniquely yours.
             </p>
             <div className="flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="inline-block px-8 py-3 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow btn content"
+                className="inline-block px-10 py-4 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg btn content"
               >
                 Join Now
               </Link>
               <button 
                 onClick={toggleChatbot}
-                className="inline-block px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow btn content"
+                className="inline-block px-10 py-4 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow text-lg btn content"
               >
                 Learn More
               </button>
@@ -287,13 +293,13 @@ const First = () => {
       {/* Footer CTA */}
       <div className="py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-1s content">
+          <h2 className="text-4xl font-bold mb-4 animate__animated animate__fadeInUp content">Ready to get started?</h2>
+          <p className="text-2xl mb-8 max-w-2xl mx-auto leading-relaxed animate__animated animate__fadeInUp animate__delay-1s content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
             to="/login"
-            className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow content"
+            className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg content"
           >
             Sign Up Free
           </Link>
