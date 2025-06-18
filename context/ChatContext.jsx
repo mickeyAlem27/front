@@ -220,22 +220,24 @@ export const ChatProvider = ({ children }) => {
   };
 
   const deleteMessage = async (messageId, deleteFor = 'me') => {
-  try {
-    const { data } = await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/api/messages/${messageId}?deleteFor=${deleteFor}`,
-      { headers: { token: localStorage.getItem("token") } }
-    );
-    if (data.success) {
-      setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== messageId));
-      toast.success("Message deleted successfully");
-    } else {
-      toast.error(data.message);
+    try {
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/messages/${messageId}`,
+        {
+          headers: { token: localStorage.getItem("token") },
+          params: { deleteFor },
+        }
+      );
+      if (data.success) {
+        setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== messageId));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error(error.response?.data?.message || error.message);
     }
-  } catch (error) {
-    console.error("Error deleting message:", error);
-    toast.error(error.response?.data?.message || error.message);
-  }
-};
+  };
 
   const subscribeToMessages = () => {
     if (!socket) {

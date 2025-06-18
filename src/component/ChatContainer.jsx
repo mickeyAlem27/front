@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
-const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
 const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
@@ -86,8 +86,9 @@ const ChatContainer = () => {
   // Handle delete action
   const handleDelete = async (messageId, deleteFor) => {
     try {
-      await deleteMessage(messageId, deleteFor); // Pass deleteFor parameter
-      setDeleteMenu(null); // Close menu after deletion
+      await deleteMessage(messageId, deleteFor);
+      setDeleteMenu(null);
+      toast.success(`Message deleted ${deleteFor === 'me' ? 'for you' : 'for everyone'}`);
     } catch (error) {
       console.error("Error deleting message:", error);
       toast.error("Failed to delete message");
@@ -222,30 +223,30 @@ const ChatContainer = () => {
                 <div
                   className={`absolute top-0 ${
                     msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
-                  } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block`}
+                  } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block transition-all duration-200 ease-in-out`}
                 >
-                  <button onClick={() => handleReply(msg)} className="block px-3 py-1 hover:bg-gray-700">
+                  <button onClick={() => handleReply(msg)} className="block px-3 py-1 hover:bg-gray-700 rounded-t">
                     Reply
                   </button>
                   {msg.senderId._id === authUser._id && (
                     <button
                       onClick={() => toggleDeleteMenu(msg._id)}
-                      className="block px-3 py-1 hover:bg-gray-700"
+                      className="block px-3 py-1 hover:bg-gray-700 rounded-b"
                     >
                       Delete
                     </button>
                   )}
                   {msg.senderId._id === authUser._id && deleteMenu === msg._id && (
-                    <div className="absolute right-0 bg-gray-900 text-white text-xs sm:text-sm rounded shadow-lg">
+                    <div className="absolute right-0 mt-1 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-xl border border-gray-700 opacity-0 animate-fade-in transition-opacity duration-300">
                       <button
                         onClick={() => handleDelete(msg._id, 'me')}
-                        className="block px-3 py-1 hover:bg-gray-700 w-full text-left"
+                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-t-lg transition-colors duration-200"
                       >
                         Delete for Me
                       </button>
                       <button
                         onClick={() => handleDelete(msg._id, 'everyone')}
-                        className="block px-3 py-1 hover:bg-gray-700 w-full text-left"
+                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-b-lg transition-colors duration-200"
                       >
                         Delete for Everyone
                       </button>
