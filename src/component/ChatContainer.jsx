@@ -19,7 +19,8 @@ const ChatContainer = () => {
   const [input, setInput] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
-  const [deleteMenu, setDeleteMenu] = useState(null); // Track which message's delete menu is open
+  const [activeMenu, setActiveMenu] = useState(null); // Track which message's menu is open
+  const [deleteMenu, setDeleteMenu] = useState(null); // Track which message's delete sub-menu is open
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -57,6 +58,7 @@ const ChatContainer = () => {
   const handleReply = (message) => {
     console.log("Opening reply for message:", message._id);
     setReplyingTo(message);
+    setActiveMenu(null); // Close menu after action
   };
 
   const cancelReply = () => {
@@ -86,9 +88,16 @@ const ChatContainer = () => {
     }
   };
 
-  // Toggle delete menu for a specific message
+  // Toggle message menu (Reply/Delete) on touch/click
+  const toggleMessageMenu = (messageId) => {
+    console.log(`Toggling menu for message: ${messageId}, Current activeMenu: ${activeMenu}`);
+    setActiveMenu(activeMenu === messageId ? null : messageId);
+    setDeleteMenu(null); // Close delete sub-menu when toggling main menu
+  };
+
+  // Toggle delete sub-menu
   const toggleDeleteMenu = (messageId) => {
-    console.log(`Toggling delete menu for message: ${messageId}, Current deleteMenu: ${deleteMenu}`);
+    console.log(`Toggling delete sub-menu for message: ${messageId}, Current deleteMenu: ${deleteMenu}`);
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
@@ -97,6 +106,7 @@ const ChatContainer = () => {
     console.log(`Deleting message ${messageId} with deleteFor=${deleteFor}`);
     try {
       await deleteMessage(messageId, deleteFor);
+      setActiveMenu(null);
       setDeleteMenu(null);
       toast.success(`Message deleted ${deleteFor === 'me' ? 'for you' : 'for everyone'}`);
     } catch (error) {
@@ -170,8 +180,10 @@ const ChatContainer = () => {
             className={`flex items-end gap-2 sm:gap-3 mb-4 ${
               msg.senderId._id === authUser._id ? 'justify-end flex-row-reverse' : 'justify-start flex-row-reverse'
             }`}
+            onClick={() => toggleMessageMenu(msg._id)}
+            onTouchStart={() => toggleMessageMenu(msg._id)}
           >
-            <div className="relative group">
+            <div className="relative">
               {msg.image ? (
                 <div className="flex flex-col">
                   <img
@@ -229,21 +241,29 @@ const ChatContainer = () => {
                 </div>
               )}
 
-              {!msg.isDeleted && (
+              {!msg.isDeleted && activeMenu === msg._id && (
                 <div
                   className={`absolute top-0 z-20 ${
                     msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
-                  } bg-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-lg transition-all duration-200 ease-in-out`}
+                  } bg-gray-800 text-white text-sm rounded-lg shadow-lg transform scale-95 transition-transform duration-200 ease-in-out ${
+                    activeMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+                  }`}
                 >
                   <button
-                    onClick={() => handleReply(msg)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent closing menu
+                      handleReply(msg);
+                    }}
                     className="block px-4 py-2 hover:bg-gray-700 rounded-t-lg w-full text-left"
                   >
                     Reply
                   </button>
                   {msg.senderId._id === authUser._id && (
                     <button
-                      onClick={() => toggleDeleteMenu(msg._id)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent closing menu
+                        toggleDeleteMenu(msg._id);
+                      }}
                       className="block px-4 py-2 hover:bg-gray-700 rounded-b-lg w-full text-left"
                     >
                       Delete
@@ -251,19 +271,25 @@ const ChatContainer = () => {
                   )}
                   {msg.senderId._id === authUser._id && deleteMenu === msg._id && (
                     <div
-                      className={`absolute right-0 mt-1 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-xl border border-gray-700 transform scale-95 transition-transform duration-200 ease-in-out z-30 ${
+                      className={`absolute right-0 mt-1 bg-gray-900 text-white text-xs rounded-lg shadow-xl transform scale-95 transition-transform duration-200 ease-in-out z-30 ${
                         deleteMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                       }`}
                     >
                       <button
-                        onClick={() => handleDelete(msg._id, 'me')}
-                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-t-lg transition-colors duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent closing menu
+                          handleDelete(msg._id, 'me');
+                        }}
+                        className="block px-3 py-1.5 hover:bg-violet-600/50 rounded-t-lg w-full text-left"
                       >
                         Delete for Me
                       </button>
                       <button
-                        onClick={() => handleDelete(msg._id, 'everyone')}
-                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-b-lg transition-colors duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent closing menu
+                          handleDelete(msg._id, 'everyone');
+                        }}
+                        className="block px-3 py-1.5 hover:bg-violet-600/50 rounded-b-lg w-full text-left"
                       >
                         Delete for Everyone
                       </button>
@@ -322,7 +348,7 @@ const ChatContainer = () => {
                 <button onClick={() => addEmoji('👎')} className="text-lg hover:bg-gray-600 p-1 rounded">👎</button>
                 <button onClick={() => addEmoji('😎')} className="text-lg hover:bg-gray-600 p-1 rounded">😎</button>
                 <button onClick={() => addEmoji('😄')} className="text-lg hover:bg-gray-600 p-1 rounded">😄</button>
-                <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded-full">🚖</button>
+                <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded">🚀</button>
               </div>
             </div>
           )}
@@ -337,8 +363,8 @@ const ChatContainer = () => {
                 selectedUser?.blocked
                   ? "Cannot message a blocked user"
                   : replyingTo
-                    ? "Type your reply..."
-                    : "Send a message"
+                  ? "Type your reply..."
+                  : "Send a message"
               }
               className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent"
               disabled={selectedUser?.blocked}
@@ -379,12 +405,12 @@ const ChatContainer = () => {
         autoPlay
         loop
         muted
-        onError={(e) => console.log('Video failed to load error: ', e)}
+        onError={(e) => console.error('Video failed to load:', e)}
       >
         <source src={assets.Sample} type="video/mp4" />
-        Your browser does not support this video tag.
+        Your browser does not support the video tag.
       </video>
-      <p className="text-lg font-medium text-center">Feel free to chat</p>
+      <p className="text-lg font-medium text-white text-center">Feel free to chat</p>
     </div>
   );
 };
