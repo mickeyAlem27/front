@@ -223,6 +223,114 @@ const First = () => {
 
         // Footer CTA - Scroll Down
         window.gsap.fromTo(
+          '.hero-section-2 .content',
+          { y: 50, opacity: 0, filter: 'blur(5px)' },
+          {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0)',
+            duration: 1.2,
+            ease: 'power3.out',
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+        window.gsap.to('.hero-section-2', {
+          backgroundPositionY: '20%',
+          scale: 1.05,
+          scrollTrigger: {
+            trigger: '.hero-section-2',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        window.gsap.fromTo(
+          '.hero-section-2 .btn',
+          { rotation: -5, opacity: 0, scale: 0.9 },
+          {
+            rotation: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'back.out(1.7)',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+
+        // Hero Section 2 - Scroll Up
+        window.gsap.fromTo(
+          '.hero-section-2 .content',
+          { y: 60, opacity: 0, filter: 'blur(5px)' },
+          {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0)',
+            duration: 1.2,
+            ease: 'power4.out',
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'bottom 80%',
+              onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .content', {
+                y: 0,
+                opacity: 1,
+                filter: 'blur(0)',
+                duration: 1.2,
+                ease: 'power4.out',
+                stagger: 0.2,
+              }),
+              onLeave: () => window.gsap.to('.hero-section-2 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
+            },
+          }
+        );
+        window.gsap.fromTo(
+          '.hero-section-2 .btn',
+          { rotation: 10, opacity: 0, scale: 0.8 },
+          {
+            rotation: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'back.out(1.7)',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'bottom 80%',
+              onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .btn', {
+                rotation: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                ease: 'back.out(1.7)',
+                stagger: 0.1,
+              }),
+              onLeave: () => window.gsap.to('.hero-section-2 .btn', { rotation: 10, opacity: 0, scale: 0.8 }),
+            },
+          }
+        );
+        window.gsap.to('.hero-section-2', {
+          backgroundPositionY: '-20%',
+          scale: 1,
+          scrollTrigger: {
+            trigger: '.hero-section-2',
+            start: 'bottom top',
+            end: 'top bottom',
+            scrub: 1,
+          },
+        });
+
+        // Footer CTA - Scroll Down
+        window.gsap.fromTo(
           '.footer-cta .content',
           { y: 30, opacity: 0, filter: 'blur(5px)' },
           {
@@ -389,12 +497,12 @@ const First = () => {
       <div className="pt-24 relative z-10">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[250px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
+          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-2 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
             <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
@@ -402,7 +510,7 @@ const First = () => {
             </p>
             <Link
               to="/login"
-              className="inline-block px-6 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-base lg:text-lg content"
+              className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl content"
             >
               Start Chatting Now
             </Link>
@@ -411,12 +519,12 @@ const First = () => {
 
         {/* Second Hero Section */}
         <div 
-          className="relative min-h-[250px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
+          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
           style={{ backgroundImage: `url(${assets.webfront2})` }}
         >
           <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-2 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
             <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
@@ -425,13 +533,13 @@ const First = () => {
             <div className="flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="inline-block px-6 py-2 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-base lg:text-lg btn content"
+                className="inline-block px-10 py-4 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl btn content"
               >
                 Join Now
               </Link>
               <button 
                 onClick={toggleChatbot}
-                className="inline-block px-6 py-2 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow text-base lg:text-lg btn content"
+                className="inline-block px-10 py-4 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl btn content"
               >
                 Learn More
               </button>
