@@ -393,7 +393,7 @@ const First = () => {
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
-          <div className="relative z-20 text-center text-white max-w-4xl px-4">
+          <div className="relative z-10 text-center text-white max-w-4xl px-4">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
