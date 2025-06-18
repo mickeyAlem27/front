@@ -33,45 +33,83 @@ const First = () => {
       if (window.gsap && window.ScrollTrigger) {
         window.gsap.registerPlugin(window.ScrollTrigger);
 
-        // Hero sections
+        // Hero Section 1
         window.gsap.fromTo(
-          '.hero-section-1',
-          { x: -100, opacity: 0 },
+          '.hero-section-1 .content',
+          { y: 50, opacity: 0 },
           {
-            x: 0,
+            y: 0,
             opacity: 1,
-            duration: 1,
-            ease: 'power2.out',
+            duration: 1.2,
+            ease: 'power3.out',
+            stagger: 0.2,
             scrollTrigger: {
               trigger: '.hero-section-1',
-              start: 'top 80%',
+              start: 'top 85%',
             },
           }
         );
+        window.gsap.to('.hero-section-1', {
+          backgroundPositionY: '20%',
+          scrollTrigger: {
+            trigger: '.hero-section-1',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+
+        // Hero Section 2
         window.gsap.fromTo(
-          '.hero-section-2',
-          { x: 100, opacity: 0 },
+          '.hero-section-2 .content',
+          { y: 50, opacity: 0 },
           {
-            x: 0,
+            y: 0,
             opacity: 1,
-            duration: 1,
-            ease: 'power2.out',
+            duration: 1.2,
+            ease: 'power3.out',
+            stagger: 0.2,
             scrollTrigger: {
               trigger: '.hero-section-2',
-              start: 'top 80%',
+              start: 'top 85%',
+            },
+          }
+        );
+        window.gsap.to('.hero-section-2', {
+          backgroundPositionY: '20%',
+          scrollTrigger: {
+            trigger: '.hero-section-2',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        window.gsap.fromTo(
+          '.hero-section-2 .btn',
+          { rotation: -5, opacity: 0 },
+          {
+            rotation: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'back.out(1.7)',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'top 85%',
             },
           }
         );
 
         // Footer CTA
         window.gsap.fromTo(
-          '.footer-cta',
-          { scale: 0.8, opacity: 0 },
+          '.footer-cta .content',
+          { y: 30, opacity: 0 },
           {
-            scale: 1,
+            y: 0,
             opacity: 1,
             duration: 1,
-            ease: 'elastic.out(1, 0.5)',
+            ease: 'power3.out',
+            stagger: 0.2,
             scrollTrigger: {
               trigger: '.footer-cta',
               start: 'top 90%',
@@ -102,6 +140,26 @@ const First = () => {
       document.body.removeChild(scrollTriggerScript);
     };
   }, []);
+
+  // Toggle Jotform chatbot
+  const toggleChatbot = () => {
+    try {
+      // Attempt to call Jotform's toggle function (if available)
+      if (window.jfAgent && typeof window.jfAgent.toggle === 'function') {
+        window.jfAgent.toggle();
+      } else {
+        // Fallback: Toggle chatbot visibility by querying DOM
+        const chatbot = document.querySelector('#jf-agent, .jf-agent');
+        if (chatbot) {
+          chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+        } else {
+          console.warn('Jotform chatbot not found. Ensure the script is loaded correctly.');
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling Jotform chatbot:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -180,15 +238,15 @@ const First = () => {
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn">
+            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
-            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s">
+            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s content">
               Experience seamless real-time messaging with friends and colleagues. Share moments, exchange ideas, and stay connected like never before.
             </p>
             <Link
               to="/login"
-              className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow"
+              className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow content"
             >
               Start Chatting Now
             </Link>
@@ -202,20 +260,23 @@ const First = () => {
         >
           <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn">
+            <h1 className="text-5xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
-            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s">
+            <p className="text-xl mb-8 text-gray-100 animate__animated animate__zoomIn animate__delay-1s content">
               Share photos, videos, and files effortlessly. Customize your profile and make every conversation uniquely yours.
             </p>
             <div className="flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="inline-block px-8 py-3 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow"
+                className="inline-block px-8 py-3 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow btn content"
               >
                 Join Now
               </Link>
-              <button className="inline-block px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow">
+              <button 
+                onClick={toggleChatbot}
+                className="inline-block px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow btn content"
+              >
                 Learn More
               </button>
             </div>
@@ -226,13 +287,13 @@ const First = () => {
       {/* Footer CTA */}
       <div className="py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 animate__animated animate__fadeInUp">Ready to get started?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-1s">
+          <h2 className="text-3xl font-bold mb-4 animate__animated animate__fadeInUp content">Ready to get started?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-1s content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
             to="/login"
-            className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow"
+            className="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow content"
           >
             Sign Up Free
           </Link>
