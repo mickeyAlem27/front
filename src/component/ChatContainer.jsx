@@ -19,6 +19,7 @@ const ChatContainer = () => {
   const [input, setInput] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const [deleteMenu, setDeleteMenu] = useState(null); // Track which message's delete menu is open
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -74,6 +75,22 @@ const ChatContainer = () => {
     if (scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
       setIsUserScrolling(false);
+    }
+  };
+
+  // Toggle delete menu for a specific message
+  const toggleDeleteMenu = (messageId) => {
+    setDeleteMenu(deleteMenu === messageId ? null : messageId);
+  };
+
+  // Handle delete action
+  const handleDelete = async (messageId, deleteFor) => {
+    try {
+      await deleteMessage(messageId, deleteFor); // Pass deleteFor parameter
+      setDeleteMenu(null); // Close menu after deletion
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error("Failed to delete message");
     }
   };
 
@@ -211,9 +228,28 @@ const ChatContainer = () => {
                     Reply
                   </button>
                   {msg.senderId._id === authUser._id && (
-                    <button onClick={() => deleteMessage(msg._id)} className="block px-3 py-1 hover:bg-gray-700">
+                    <button
+                      onClick={() => toggleDeleteMenu(msg._id)}
+                      className="block px-3 py-1 hover:bg-gray-700"
+                    >
                       Delete
                     </button>
+                  )}
+                  {msg.senderId._id === authUser._id && deleteMenu === msg._id && (
+                    <div className="absolute right-0 bg-gray-900 text-white text-xs sm:text-sm rounded shadow-lg">
+                      <button
+                        onClick={() => handleDelete(msg._id, 'me')}
+                        className="block px-3 py-1 hover:bg-gray-700 w-full text-left"
+                      >
+                        Delete for Me
+                      </button>
+                      <button
+                        onClick={() => handleDelete(msg._id, 'everyone')}
+                        className="block px-3 py-1 hover:bg-gray-700 w-full text-left"
+                      >
+                        Delete for Everyone
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
