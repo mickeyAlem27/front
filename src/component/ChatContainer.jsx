@@ -56,6 +56,11 @@ const ChatContainer = () => {
   const handleReply = (message) => setReplyingTo(message);
   const cancelReply = () => setReplyingTo(null);
 
+  // Add emoji to input field
+  const addEmoji = (emoji) => {
+    setInput((prev) => prev + emoji);
+  };
+
   // Scroll to first message
   const scrollToFirst = () => {
     if (scrollStart.current) {
@@ -250,11 +255,21 @@ const ChatContainer = () => {
       <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
         <div className="flex-1 flex flex-col">
           {replyingTo && (
-            <div className="bg-gray-700/50 p-3 rounded-t-lg text-sm text-gray-300 flex items-center">
-              <p className="flex-1 truncate">
-                ❤️😊🎉👍👎😎😄🚀 Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
-              </p>
-              <button onClick={cancelReply} className="text-red-500 text-sm">Cancel</button>
+            <div className="bg-gray-700/50 p-3 rounded-t-lg text-sm text-gray-300 flex flex-col">
+              <div className="flex items-center">
+                <p className="flex-1 truncate">
+                  ❤️👍👎😎😄🚀 Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
+                </p>
+                <button onClick={cancelReply} className="text-red-500 text-sm">Cancel</button>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <button onClick={() => addEmoji('❤️')} className="text-lg hover:bg-gray-600 p-1 rounded">❤️</button>
+                <button onClick={() => addEmoji('👍')} className="text-lg hover:bg-gray-600 p-1 rounded">👍</button>
+                <button onClick={() => addEmoji('👎')} className="text-lg hover:bg-gray-600 p-1 rounded">👎</button>
+                <button onClick={() => addEmoji('😎')} className="text-lg hover:bg-gray-600 p-1 rounded">😎</button>
+                <button onClick={() => addEmoji('😄')} className="text-lg hover:bg-gray-600 p-1 rounded">😄</button>
+                <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded">🚀</button>
+              </div>
             </div>
           )}
 
