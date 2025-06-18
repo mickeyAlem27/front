@@ -19,7 +19,6 @@ export const ChatProvider = ({ children }) => {
         headers: { token: localStorage.getItem("token") },
       });
       if (data.success) {
-        // Map users to include lastMessageTime
         const usersWithLastMessageTime = await Promise.all(
           data.users.map(async (user) => {
             try {
@@ -220,6 +219,7 @@ export const ChatProvider = ({ children }) => {
   };
 
   const deleteMessage = async (messageId, deleteFor = 'me') => {
+    console.log(`Attempting to delete message ${messageId} with deleteFor=${deleteFor}`);
     try {
       const { data } = await axios.delete(
         `${import.meta.env.VITE_BACKEND_URL}/api/messages/${messageId}`,
@@ -228,14 +228,20 @@ export const ChatProvider = ({ children }) => {
           params: { deleteFor },
         }
       );
+      console.log("Delete API response:", data);
       if (data.success) {
-        setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== messageId));
+        setMessages((prevMessages) => {
+          const updatedMessages = prevMessages.filter((msg) => msg._id !== messageId);
+          console.log("Updated messages after delete:", updatedMessages);
+          return updatedMessages;
+        });
       } else {
+        console.error("Delete failed:", data.message);
         toast.error(data.message);
       }
     } catch (error) {
-      console.error("Error deleting message:", error);
-      toast.error(error.response?.data?.message || error.message);
+      console.error("Error deleting message:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to delete message");
     }
   };
 
@@ -267,7 +273,6 @@ export const ChatProvider = ({ children }) => {
           icon: "💬",
           style: { background: "#282446", color: "white" },
         });
-        // Update lastMessageTime for the sender
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user._id === senderId ? { ...user, lastMessageTime: message.createdAt } : user
@@ -284,8 +289,12 @@ export const ChatProvider = ({ children }) => {
     });
 
     socket.on("messageDeleted", (messageId) => {
-      console.log("Received messageDeleted:", messageId);
-      setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== messageId));
+      console.log("Received messageDeleted event for message:", messageId);
+      setMessages((prevMessages) => {
+        const updatedMessages = prevMessages.filter((msg) => msg._id !== messageId);
+        console.log("Messages after socket delete:", updatedMessages);
+        return updatedMessages;
+      });
     });
   };
 

@@ -54,11 +54,19 @@ const ChatContainer = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleReply = (message) => setReplyingTo(message);
-  const cancelReply = () => setReplyingTo(null);
+  const handleReply = (message) => {
+    console.log("Opening reply for message:", message._id);
+    setReplyingTo(message);
+  };
+
+  const cancelReply = () => {
+    console.log("Canceling reply");
+    setReplyingTo(null);
+  };
 
   // Add emoji to input field
   const addEmoji = (emoji) => {
+    console.log("Adding emoji:", emoji);
     setInput((prev) => prev + emoji);
   };
 
@@ -80,17 +88,19 @@ const ChatContainer = () => {
 
   // Toggle delete menu for a specific message
   const toggleDeleteMenu = (messageId) => {
+    console.log("Toggling delete menu for message:", messageId, "Current deleteMenu:", deleteMenu);
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
   // Handle delete action
   const handleDelete = async (messageId, deleteFor) => {
+    console.log(`Deleting message ${messageId} with deleteFor=${deleteFor}`);
     try {
       await deleteMessage(messageId, deleteFor);
       setDeleteMenu(null);
       toast.success(`Message deleted ${deleteFor === 'me' ? 'for you' : 'for everyone'}`);
     } catch (error) {
-      console.error("Error deleting message:", error);
+      console.error("Error in handleDelete:", error);
       toast.error("Failed to delete message");
     }
   };
@@ -121,8 +131,8 @@ const ChatContainer = () => {
   // Fetch messages when user is selected
   useEffect(() => {
     if (selectedUser) {
+      console.log("Fetching messages for user:", selectedUser._id);
       getMessages(selectedUser._id);
-      // Do not reset isUserScrolling here to prevent auto-scroll after interaction
     }
   }, [selectedUser, getMessages]);
 
@@ -221,7 +231,7 @@ const ChatContainer = () => {
 
               {!msg.isDeleted && (
                 <div
-                  className={`absolute top-0 ${
+                  className={`absolute top-0 z-10 ${
                     msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
                   } bg-gray-800 text-white text-xs sm:text-sm rounded hidden group-hover:block transition-all duration-200 ease-in-out`}
                 >
