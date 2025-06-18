@@ -444,9 +444,9 @@ const First = () => {
       <div className="py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-          <p className="text-3xl md:text-4xl lg:text-5xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s content">
-            Join thousands of happy users communicating effortlessly with ChatApp.
-          </p>
+         <p className="text-xl md:text-2xl lg:text-3xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s">
+  Join thousands of happy users communicating effortlessly with ChatApp.
+</p>
           <Link
             to="/login"
             className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl content"
