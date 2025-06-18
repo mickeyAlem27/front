@@ -55,13 +55,13 @@ const First = () => {
         // Hero Section 1 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { x: -20, opacity: 0, scale: 0.98 },
+          { x: -30, opacity: 0, scale: 0.97 },
           {
             x: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.8,
-            ease: 'expo.out',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-1',
@@ -72,25 +72,25 @@ const First = () => {
           }
         );
         window.gsap.to('.hero-section-1', {
-          y: '15%',
+          y: '20%',
           scale: 1.05,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 0.8,
+            scrub: 0.5,
           },
         });
 
         // Hero Section 1 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { y: -20, opacity: 0.3 },
+          { y: -15, opacity: 0.5 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            ease: 'expo.out',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-1',
@@ -99,34 +99,34 @@ const First = () => {
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-1 .content', {
                 y: 0,
                 opacity: 1,
-                duration: 0.8,
-                ease: 'expo.out',
+                duration: 0.7,
+                ease: 'power4.out',
               }),
-              onLeaveBack: () => window.gsap.to('.hero-section-1 .content', { y: -20, opacity: 0.3 }),
+              onLeaveBack: () => window.gsap.to('.hero-section-1 .content', { y: -15, opacity: 0.5 }),
             },
           }
         );
         window.gsap.to('.hero-section-1', {
-          y: '-15%',
+          y: '-20%',
           scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'bottom top',
             end: 'top bottom',
-            scrub: 0.8,
+            scrub: 0.5,
           },
         });
 
         // Hero Section 2 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { x: 20, opacity: 0, scale: 0.98 },
+          { x: 30, opacity: 0, scale: 0.97 },
           {
             x: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.8,
-            ease: 'expo.out',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
@@ -138,13 +138,13 @@ const First = () => {
         );
         window.gsap.fromTo(
           '.hero-section-2 .btn',
-          { y: 10, opacity: 0, scale: 0.95 },
+          { y: 15, opacity: 0, scale: 0.9 },
           {
             y: 0,
             opacity: 1,
             scale: 1,
             duration: 0.6,
-            ease: 'back.out(1.4)',
+            ease: 'elastic.out(1, 0.5)',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
@@ -155,25 +155,25 @@ const First = () => {
           }
         );
         window.gsap.to('.hero-section-2', {
-          y: '15%',
+          y: '20%',
           scale: 1.05,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 0.8,
+            scrub: 0.5,
           },
         });
 
         // Hero Section 2 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { y: -20, opacity: 0.3 },
+          { y: -15, opacity: 0.5 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            ease: 'expo.out',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
@@ -182,21 +182,21 @@ const First = () => {
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .content', {
                 y: 0,
                 opacity: 1,
-                duration: 0.8,
-                ease: 'expo.out',
+                duration: 0.7,
+                ease: 'power4.out',
               }),
-              onLeaveBack: () => window.gsap.to('.hero-section-2 .content', { y: -20, opacity: 0.3 }),
+              onLeaveBack: () => window.gsap.to('.hero-section-2 .content', { y: -15, opacity: 0.5 }),
             },
           }
         );
         window.gsap.fromTo(
           '.hero-section-2 .btn',
-          { y: -10, opacity: 0.3 },
+          { y: -15, opacity: 0.5 },
           {
             y: 0,
             opacity: 1,
             duration: 0.6,
-            ease: 'back.out(1.4)',
+            ease: 'elastic.out(1, 0.5)',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
@@ -206,20 +206,20 @@ const First = () => {
                 y: 0,
                 opacity: 1,
                 duration: 0.6,
-                ease: 'back.out(1.4)',
+                ease: 'elastic.out(1, 0.5)',
               }),
-              onLeaveBack: () => window.gsap.to('.hero-section-2 .btn', { y: -10, opacity: 0.3 }),
+              onLeaveBack: () => window.gsap.to('.hero-section-2 .btn', { y: -15, opacity: 0.5 }),
             },
           }
         );
         window.gsap.to('.hero-section-2', {
-          y: '-15%',
+          y: '-20%',
           scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'bottom top',
             end: 'top bottom',
-            scrub: 0.8,
+            scrub: 0.5,
           },
         });
 
@@ -230,8 +230,8 @@ const First = () => {
           {
             scale: 1,
             opacity: 1,
-            duration: 0.8,
-            ease: 'back.out(1.4)',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.footer-cta',
@@ -245,12 +245,12 @@ const First = () => {
         // Footer CTA - Scroll Up
         window.gsap.fromTo(
           '.footer-cta .content',
-          { y: -30, opacity: 0.3 },
+          { y: -15, opacity: 0.5 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            ease: 'expo.out',
+            duration: 0.7,
+            ease: 'power4.out',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.footer-cta',
@@ -259,10 +259,10 @@ const First = () => {
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.footer-cta .content', {
                 y: 0,
                 opacity: 1,
-                duration: 0.8,
-                ease: 'expo.out',
+                duration: 0.7,
+                ease: 'power4.out',
               }),
-              onLeaveBack: () => window.gsap.to('.footer-cta .content', { y: -30, opacity: 0.3 }),
+              onLeaveBack: () => window.gsap.to('.footer-cta .content', { y: -15, opacity: 0.5 }),
             },
           }
         );
@@ -273,7 +273,7 @@ const First = () => {
           y: 20,
           duration: 0.5,
           stagger: 0.1,
-          ease: 'expo.out',
+          ease: 'power4.out',
           delay: 0.2,
         });
       }
@@ -318,10 +318,10 @@ const First = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-inter">
       {/* Modern Navbar */}
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-white shadow-sm z-50 backdrop-blur-sm bg-opacity-80 animate__animated animate__fadeInDown">
+      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-white shadow-sm z-50 backdrop-blur-sm bg-opacity-80">
         <div className="flex space-x-2">
           <button
-            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg animate__animated animate__pulse animate__infinite animate__slow text-sm lg:text-base"
+            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform text-sm lg:text-base"
             aria-label="ChatApp Section"
           >
             ChatApp
@@ -329,7 +329,7 @@ const First = () => {
           
           <div className="relative group z-40">
             <button
-              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center animate__animated animate__fadeIn text-sm lg:text-base"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200 flex items-center hover:scale-105 transform text-sm lg:text-base"
               aria-label="Feature Section"
             >
               Features
@@ -362,7 +362,7 @@ const First = () => {
           </div>
           
           <button
-            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 animate__animated animate__fadeIn text-sm lg:text-base"
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200 hover:scale-105 transform text-sm lg:text-base"
             aria-label="About Section"
           >
             About
@@ -371,7 +371,7 @@ const First = () => {
         
         <Link to="/login">
           <button
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center animate__animated animate__pulse animate__infinite animate__slow text-sm lg:text-base"
+            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform flex items-center text-sm lg:text-base"
             aria-label="Login to ChatApp"
           >
             Login
@@ -383,23 +383,23 @@ const First = () => {
       </nav>
 
       {/* Hero Sections */}
-      <div className="pt-24 relative z-10">
+      <div className="w-full">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[300px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
+          className="min-h-[300px] flex items-start justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1 mb-12 z-10 block w-full border border-gray-200"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
-          <div className="relative z-20 text-center text-white max-w-3xl px-4 overflow-visible">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/10 backdrop-blur-sm rounded-xl"></div>
+          <div className="relative z-20 text-center text-white max-w-3xl mx-auto pt-8 overflow-visible">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight content">
-              Connect Instantly with <span className="text-blue-300">ChatApp</span>
+              Connect Instantly with <span className="text-blue-400">ChatApp</span>
             </h1>
             <p className="text-xl md:text-2xl lg:text-3xl mb-8 text-gray-100 leading-normal content">
               Experience seamless real-time messaging with friends and colleagues. Share moments, exchange ideas, and stay connected like never before.
             </p>
             <Link
               to="/login"
-              className="inline-block px-6 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base content"
+              className="inline-block px-6 py-2 bg-white text-blue-500 rounded-full font-medium hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 transform text-sm lg:text-base content"
             >
               Start Chatting Now
             </Link>
@@ -408,13 +408,13 @@ const First = () => {
 
         {/* Second Hero Section */}
         <div 
-          className="relative min-h-[300px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
+          className="min-h-[300px] flex items-start justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-2 mb-12 z-9 block w-full border border-gray-200"
           style={{ backgroundImage: `url(${assets.webfront2})` }}
         >
-          <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm rounded-xl"></div>
-          <div className="relative z-20 text-center text-white max-w-3xl px-4 overflow-visible">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-purple-700/20 backdrop-blur-sm rounded-xl"></div>
+          <div className="relative z-20 text-center text-white max-w-3xl mx-auto pt-8 overflow-visible">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight content">
-              More Than Just <span className="text-purple-300">Messages</span>
+              More Than Just <span className="text-purple-400">Messages</span>
             </h1>
             <p className="text-xl md:text-2xl lg:text-3xl mb-8 text-gray-100 leading-normal content">
               Share photos, videos, and files effortlessly. Customize your profile and make every conversation uniquely yours.
@@ -422,13 +422,13 @@ const First = () => {
             <div className="flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="inline-block px-6 py-2 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base btn content"
+                className="inline-block px-6 py-2 bg-white text-purple-500 rounded-full font-medium hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 transform text-sm lg:text-base btn content"
               >
                 Join Now
               </Link>
               <button 
                 onClick={toggleChatbot}
-                className="inline-block px-6 py-2 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 text-sm lg:text-base btn content"
+                className="inline-block px-6 py-2 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-all duration-200 hover:scale-105 transform text-sm lg:text-base btn content"
               >
                 Learn More
               </button>
@@ -438,15 +438,15 @@ const First = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
+      <div className="py-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white z-8 block w-full footer-cta">
         <div className="container mx-auto text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 content">Ready to get started?</h2>
-          <p className="text-xl md:text-2xl lg:text-3xl mb-6 max-w-2xl mx-auto leading-normal content">
+          <p className="text-xl md:text-2xl lg:text-3xl mb-8 max-w-2xl mx-auto leading-normal content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
             to="/login"
-            className="inline-block px-6 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base content"
+            className="inline-block px-6 py-2 bg-white text-blue-500 rounded-full font-medium hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 transform text-sm lg:text-base content"
           >
             Sign Up Free
           </Link>
