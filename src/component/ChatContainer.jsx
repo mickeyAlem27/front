@@ -252,7 +252,7 @@ const ChatContainer = () => {
           {replyingTo && (
             <div className="bg-gray-700/50 p-3 rounded-t-lg text-sm text-gray-300 flex items-center">
               <p className="flex-1 truncate">
-                Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
+                ❤️😊🎉👍👎😎😄🚀 Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
               </p>
               <button onClick={cancelReply} className="text-red-500 text-sm">Cancel</button>
             </div>
