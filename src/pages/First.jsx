@@ -247,7 +247,7 @@ const First = () => {
             <h1 className="text-6xl md:text-6xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
-            <p className="text-2xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-3xl md:text-4xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
               Experience seamless real-time messaging with friends and colleagues. Share moments, exchange ideas, and stay connected like never before.
             </p>
             <Link
@@ -269,7 +269,7 @@ const First = () => {
             <h1 className="text-6xl md:text-6xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
-            <p className="text-2xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-3xl md:text-4xl mb-8 text-gray-100 leading-relaxed animate__animated animate__zoomIn animate__delay-1s content">
               Share photos, videos, and files effortlessly. Customize your profile and make every conversation uniquely yours.
             </p>
             <div className="flex justify-center space-x-4">
@@ -294,7 +294,7 @@ const First = () => {
       <div className="py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-4 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-          <p className="text-2xl mb-8 max-w-2xl mx-auto leading-relaxed animate__animated animate__fadeInUp animate__delay-1s content">
+          <p className="text-3xl md:text-4xl mb-8 max-w-2xl mx-auto leading-relaxed animate__animated animate__fadeInUp animate__delay-1s content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
