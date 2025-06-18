@@ -44,16 +44,17 @@ const First = () => {
 
         window.addEventListener('scroll', () => {
           const direction = detectScrollDirection();
-          window.scrollDirection = direction; // Store direction globally
+          window.scrollDirection = direction;
         });
 
         // Hero Section 1 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { y: 50, opacity: 0 },
+          { y: 50, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
+            filter: 'blur(0)',
             duration: 1.2,
             ease: 'power3.out',
             stagger: 0.2,
@@ -66,6 +67,7 @@ const First = () => {
         );
         window.gsap.to('.hero-section-1', {
           backgroundPositionY: '20%',
+          scale: 1.05,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'top bottom',
@@ -77,29 +79,32 @@ const First = () => {
         // Hero Section 1 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { y: 30, opacity: 0 },
+          { y: 60, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
+            filter: 'blur(0)',
+            duration: 1.2,
+            ease: 'power4.out',
             stagger: 0.2,
             scrollTrigger: {
               trigger: '.hero-section-1',
-              start: 'bottom 85%',
+              start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-1 .content', {
                 y: 0,
                 opacity: 1,
-                duration: 1,
-                ease: 'power3.out',
+                filter: 'blur(0)',
+                duration: 1.2,
+                ease: 'power4.out',
                 stagger: 0.2,
               }),
-              onLeave: () => window.gsap.to('.hero-section-1 .content', { y: 30, opacity: 0 }),
+              onLeave: () => window.gsap.to('.hero-section-1 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
             },
           }
         );
         window.gsap.to('.hero-section-1', {
           backgroundPositionY: '-20%',
+          scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'bottom top',
@@ -111,10 +116,11 @@ const First = () => {
         // Hero Section 2 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { y: 50, opacity: 0 },
+          { y: 50, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
+            filter: 'blur(0)',
             duration: 1.2,
             ease: 'power3.out',
             stagger: 0.2,
@@ -127,6 +133,7 @@ const First = () => {
         );
         window.gsap.to('.hero-section-2', {
           backgroundPositionY: '20%',
+          scale: 1.05,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'top bottom',
@@ -155,30 +162,32 @@ const First = () => {
         // Hero Section 2 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { y: 30, opacity: 0 },
+          { y: 60, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
+            filter: 'blur(0)',
+            duration: 1.2,
+            ease: 'power4.out',
             stagger: 0.2,
             scrollTrigger: {
               trigger: '.hero-section-2',
-              start: 'bottom 85%',
+              start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .content', {
                 y: 0,
                 opacity: 1,
-                duration: 1,
-                ease: 'power3.out',
+                filter: 'blur(0)',
+                duration: 1.2,
+                ease: 'power4.out',
                 stagger: 0.2,
               }),
-              onLeave: () => window.gsap.to('.hero-section-2 .content', { y: 30, opacity: 0 }),
+              onLeave: () => window.gsap.to('.hero-section-2 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
             },
           }
         );
         window.gsap.fromTo(
           '.hero-section-2 .btn',
-          { rotation: 5, opacity: 0, scale: 0.9 },
+          { rotation: 10, opacity: 0, scale: 0.8 },
           {
             rotation: 0,
             opacity: 1,
@@ -188,7 +197,7 @@ const First = () => {
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
-              start: 'bottom 85%',
+              start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .btn', {
                 rotation: 0,
                 opacity: 1,
@@ -197,12 +206,13 @@ const First = () => {
                 ease: 'back.out(1.7)',
                 stagger: 0.1,
               }),
-              onLeave: () => window.gsap.to('.hero-section-2 .btn', { rotation: 5, opacity: 0, scale: 0.9 }),
+              onLeave: () => window.gsap.to('.hero-section-2 .btn', { rotation: 10, opacity: 0, scale: 0.8 }),
             },
           }
         );
         window.gsap.to('.hero-section-2', {
           backgroundPositionY: '-20%',
+          scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'bottom top',
@@ -214,10 +224,11 @@ const First = () => {
         // Footer CTA - Scroll Down
         window.gsap.fromTo(
           '.footer-cta .content',
-          { y: 30, opacity: 0 },
+          { y: 30, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
+            filter: 'blur(0)',
             duration: 1,
             ease: 'power3.out',
             stagger: 0.2,
@@ -232,24 +243,26 @@ const First = () => {
         // Footer CTA - Scroll Up
         window.gsap.fromTo(
           '.footer-cta .content',
-          { y: 20, opacity: 0 },
+          { y: 40, opacity: 0, filter: 'blur(5px)' },
           {
             y: 0,
             opacity: 1,
+            filter: 'blur(0)',
             duration: 0.8,
-            ease: 'power3.out',
+            ease: 'power4.out',
             stagger: 0.2,
             scrollTrigger: {
               trigger: '.footer-cta',
-              start: 'bottom 90%',
+              start: 'bottom 85%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.footer-cta .content', {
                 y: 0,
                 opacity: 1,
+                filter: 'blur(0)',
                 duration: 0.8,
-                ease: 'power3.out',
+                ease: 'power4.out',
                 stagger: 0.2,
               }),
-              onLeave: () => window.gsap.to('.footer-cta .content', { y: 20, opacity: 0 }),
+              onLeave: () => window.gsap.to('.footer-cta .content', { y: 40, opacity: 0, filter: 'blur(5px)' }),
             },
           }
         );
@@ -376,10 +389,10 @@ const First = () => {
       <div className="pt-24 relative z-10">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[500px] flex items-center justify-center p-8 bg-cover bg-center hero-section-1"
+          className="relative min-h-[400px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
@@ -398,10 +411,10 @@ const First = () => {
 
         {/* Second Hero Section */}
         <div 
-          className="relative min-h-[500px] flex items-center justify-center p-8 bg-cover bg-center hero-section-2"
+          className="relative min-h-[400px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
           style={{ backgroundImage: `url(${assets.webfront2})` }}
         >
-          <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
               More Than Just <span className="text-purple-300">Messages</span>
@@ -428,10 +441,10 @@ const First = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
+      <div className="py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-          <p className="text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s content">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate__animated animate__fadeInUp content">Ready to get started?</h2>
+          <p className="text-3xl md:text-4xl lg:text-5xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
