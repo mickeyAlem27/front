@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import assets from '../assets/assets';
 
 const First = () => {
-  // Load Jotform chatbot script and animation libraries dynamically
+  // Load Jotform chatbot script, animation libraries, and Inter font dynamically
   useEffect(() => {
     // Jotform script
     const jotformScript = document.createElement('script');
@@ -28,8 +28,14 @@ const First = () => {
     scrollTriggerScript.async = true;
     document.body.appendChild(scrollTriggerScript);
 
-    // Initialize GSAP animations once scripts are loaded
-    const initGsap = () => {
+    // Inter font
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap';
+    document.head.appendChild(fontLink);
+
+    // Initialize GSAP animations
+    const initGs = () => {
       if (window.gsap && window.ScrollTrigger) {
         window.gsap.registerPlugin(window.ScrollTrigger);
 
@@ -43,306 +49,197 @@ const First = () => {
         };
 
         window.addEventListener('scroll', () => {
-          const direction = detectScrollDirection();
-          window.scrollDirection = direction;
+          window.scrollDirection = detectScrollDirection();
         });
 
         // Hero Section 1 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { y: 50, opacity: 0, filter: 'blur(5px)' },
+          { x: -100, opacity: 0, scale: 0.95 },
           {
-            y: 0,
+            x: 0,
             opacity: 1,
-            filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power3.out',
-            stagger: 0.2,
+            scale: 1,
+            duration: 0.8,
+            ease: 'expo.out',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-1',
-              start: 'top 85%',
+              start: 'top 80%',
               toggleActions: 'play none none reverse',
             },
           }
         );
         window.gsap.to('.hero-section-1', {
-          backgroundPositionY: '20%',
-          scale: 1.05,
+          y: '30%',
+          scale: 1.1,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1,
+            scrub: 0.8,
           },
         });
 
         // Hero Section 1 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-1 .content',
-          { y: 60, opacity: 0, filter: 'blur(5px)' },
+          { y: -50, opacity: 0, rotation: 3, filter: 'blur(2px)' },
           {
             y: 0,
             opacity: 1,
+            rotation: 0,
             filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power4.out',
-            stagger: 0.2,
+            duration: 1,
+            ease: 'expo.out',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-1',
               start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-1 .content', {
                 y: 0,
                 opacity: 1,
+                rotation: 0,
                 filter: 'blur(0)',
-                duration: 1.2,
-                ease: 'power4.out',
-                stagger: 0.2,
+                duration: 1,
+                ease: 'expo.out',
               }),
-              onLeave: () => window.gsap.to('.hero-section-1 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
+              onLeaveBack: () => window.gsap.to('.hero-section-1 .content', { y: -50, opacity: 0, rotation: 3, filter: 'blur(2px)' }),
             },
           }
         );
         window.gsap.to('.hero-section-1', {
-          backgroundPositionY: '-20%',
+          y: '-30%',
           scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-1',
             start: 'bottom top',
             end: 'top bottom',
-            scrub: 1,
+            scrub: 0.8,
           },
         });
 
         // Hero Section 2 - Scroll Down
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { y: 50, opacity: 0, filter: 'blur(5px)' },
+          { x: 100, opacity: 0, scale: 0.95 },
+          {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'expo.out',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: '.hero-section-2',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+        window.gsap.fromTo(
+          '.hero-section-2 .btn',
+          { y: 20, opacity: 0, scale: 0.9 },
           {
             y: 0,
             opacity: 1,
-            filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power3.out',
-            stagger: 0.2,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(1.4)',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
-              start: 'top 85%',
+              start: 'top 80%',
               toggleActions: 'play none none reverse',
             },
           }
         );
         window.gsap.to('.hero-section-2', {
-          backgroundPositionY: '20%',
-          scale: 1.05,
+          y: '30%',
+          scale: 1.1,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1,
+            scrub: 0.8,
           },
         });
-        window.gsap.fromTo(
-          '.hero-section-2 .btn',
-          { rotation: -5, opacity: 0, scale: 0.9 },
-          {
-            rotation: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)',
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: '.hero-section-2',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
 
         // Hero Section 2 - Scroll Up
         window.gsap.fromTo(
           '.hero-section-2 .content',
-          { y: 60, opacity: 0, filter: 'blur(5px)' },
+          { y: -50, opacity: 0, rotation: -3, filter: 'blur(2px)' },
           {
             y: 0,
             opacity: 1,
+            rotation: 0,
             filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power4.out',
-            stagger: 0.2,
+            duration: 1,
+            ease: 'expo.out',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
               start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .content', {
                 y: 0,
                 opacity: 1,
+                rotation: 0,
                 filter: 'blur(0)',
-                duration: 1.2,
-                ease: 'power4.out',
-                stagger: 0.2,
+                duration: 1,
+                ease: 'expo.out',
               }),
-              onLeave: () => window.gsap.to('.hero-section-2 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
+              onLeaveBack: () => window.gsap.to('.hero-section-2 .content', { y: -50, opacity: 0, rotation: -3, filter: 'blur(2px)' }),
             },
           }
         );
         window.gsap.fromTo(
           '.hero-section-2 .btn',
-          { rotation: 10, opacity: 0, scale: 0.8 },
+          { y: -20, opacity: 0, scale: 0.9 },
           {
-            rotation: 0,
+            y: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)',
+            duration: 0.6,
+            ease: 'back.out(1.4)',
             stagger: 0.1,
             scrollTrigger: {
               trigger: '.hero-section-2',
               start: 'bottom 80%',
               onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .btn', {
-                rotation: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                ease: 'back.out(1.7)',
-                stagger: 0.1,
-              }),
-              onLeave: () => window.gsap.to('.hero-section-2 .btn', { rotation: 10, opacity: 0, scale: 0.8 }),
-            },
-          }
-        );
-        window.gsap.to('.hero-section-2', {
-          backgroundPositionY: '-20%',
-          scale: 1,
-          scrollTrigger: {
-            trigger: '.hero-section-2',
-            start: 'bottom top',
-            end: 'top bottom',
-            scrub: 1,
-          },
-        });
-
-        // Footer CTA - Scroll Down
-        window.gsap.fromTo(
-          '.hero-section-2 .content',
-          { y: 50, opacity: 0, filter: 'blur(5px)' },
-          {
-            y: 0,
-            opacity: 1,
-            filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power3.out',
-            stagger: 0.2,
-            scrollTrigger: {
-              trigger: '.hero-section-2',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-        window.gsap.to('.hero-section-2', {
-          backgroundPositionY: '20%',
-          scale: 1.05,
-          scrollTrigger: {
-            trigger: '.hero-section-2',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-        window.gsap.fromTo(
-          '.hero-section-2 .btn',
-          { rotation: -5, opacity: 0, scale: 0.9 },
-          {
-            rotation: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)',
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: '.hero-section-2',
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        // Hero Section 2 - Scroll Up
-        window.gsap.fromTo(
-          '.hero-section-2 .content',
-          { y: 60, opacity: 0, filter: 'blur(5px)' },
-          {
-            y: 0,
-            opacity: 1,
-            filter: 'blur(0)',
-            duration: 1.2,
-            ease: 'power4.out',
-            stagger: 0.2,
-            scrollTrigger: {
-              trigger: '.hero-section-2',
-              start: 'bottom 80%',
-              onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .content', {
                 y: 0,
                 opacity: 1,
-                filter: 'blur(0)',
-                duration: 1.2,
-                ease: 'power4.out',
-                stagger: 0.2,
-              }),
-              onLeave: () => window.gsap.to('.hero-section-2 .content', { y: 60, opacity: 0, filter: 'blur(5px)' }),
-            },
-          }
-        );
-        window.gsap.fromTo(
-          '.hero-section-2 .btn',
-          { rotation: 10, opacity: 0, scale: 0.8 },
-          {
-            rotation: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)',
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: '.hero-section-2',
-              start: 'bottom 80%',
-              onEnterBack: () => window.scrollDirection === 'up' && window.gsap.to('.hero-section-2 .btn', {
-                rotation: 0,
-                opacity: 1,
                 scale: 1,
-                duration: 0.8,
-                ease: 'back.out(1.7)',
-                stagger: 0.1,
+                duration: 0.6,
+                ease: 'back.out(1.4)',
               }),
-              onLeave: () => window.gsap.to('.hero-section-2 .btn', { rotation: 10, opacity: 0, scale: 0.8 }),
+              onLeaveBack: () => window.gsap.to('.hero-section-2 .btn', { y: -20, opacity: 0, scale: 0.9 }),
             },
           }
         );
         window.gsap.to('.hero-section-2', {
-          backgroundPositionY: '-20%',
+          y: '-30%',
           scale: 1,
           scrollTrigger: {
             trigger: '.hero-section-2',
             start: 'bottom top',
             end: 'top bottom',
-            scrub: 1,
+            scrub: 0.8,
           },
         });
 
         // Footer CTA - Scroll Down
         window.gsap.fromTo(
           '.footer-cta .content',
-          { y: 30, opacity: 0, filter: 'blur(5px)' },
+          { scale: 0.9, opacity: 0 },
           {
-            y: 0,
+            scale: 1,
             opacity: 1,
-            filter: 'blur(0)',
-            duration: 1,
-            ease: 'power3.out',
-            stagger: 0.2,
+            duration: 0.8,
+            ease: 'back.out(1.4)',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.footer-cta',
-              start: 'top 90%',
+              start: 'top 85%',
               toggleActions: 'play none none reverse',
             },
           }
@@ -351,14 +248,14 @@ const First = () => {
         // Footer CTA - Scroll Up
         window.gsap.fromTo(
           '.footer-cta .content',
-          { y: 40, opacity: 0, filter: 'blur(5px)' },
+          { y: -30, opacity: 0, filter: 'blur(2px)' },
           {
             y: 0,
             opacity: 1,
             filter: 'blur(0)',
             duration: 0.8,
-            ease: 'power4.out',
-            stagger: 0.2,
+            ease: 'expo.out',
+            stagger: 0.1,
             scrollTrigger: {
               trigger: '.footer-cta',
               start: 'bottom 85%',
@@ -367,10 +264,9 @@ const First = () => {
                 opacity: 1,
                 filter: 'blur(0)',
                 duration: 0.8,
-                ease: 'power4.out',
-                stagger: 0.2,
+                ease: 'expo.out',
               }),
-              onLeave: () => window.gsap.to('.footer-cta .content', { y: 40, opacity: 0, filter: 'blur(5px)' }),
+              onLeaveBack: () => window.gsap.to('.footer-cta .content', { y: -30, opacity: 0, filter: 'blur(2px)' }),
             },
           }
         );
@@ -381,14 +277,14 @@ const First = () => {
           y: 20,
           duration: 0.5,
           stagger: 0.1,
-          ease: 'power2.out',
+          ease: 'expo.out',
           delay: 0.2,
         });
       }
     };
 
     // Wait for GSAP scripts to load
-    scrollTriggerScript.onload = initGsap;
+    scrollTriggerScript.onload = initGs;
 
     // Cleanup
     return () => {
@@ -396,28 +292,26 @@ const First = () => {
       document.head.removeChild(animateCss);
       document.body.removeChild(gsapScript);
       document.body.removeChild(scrollTriggerScript);
+      document.head.removeChild(fontLink);
     };
   }, []);
 
   // Toggle Jotform chatbot
   const toggleChatbot = () => {
     try {
-      // Attempt to call Jotform's toggle function (if available)
       if (window.jfAgent && typeof window.jfAgent.toggle === 'function') {
         window.jfAgent.toggle();
       } else {
-        // Fallback: Find and toggle chatbot widget
         const chatbot = document.querySelector('#jf-agent, .jf-agent, [id*="jotform"], [class*="jotform"]');
         if (chatbot) {
           const isHidden = chatbot.style.display === 'none' || getComputedStyle(chatbot).display === 'none';
           chatbot.style.display = isHidden ? 'block' : 'none';
-          // Ensure chatbot is positioned correctly for popup effect
           chatbot.style.position = chatbot.style.position || 'fixed';
           chatbot.style.bottom = chatbot.style.bottom || '20px';
           chatbot.style.right = chatbot.style.right || '20px';
           chatbot.style.zIndex = chatbot.style.zIndex || '1000';
         } else {
-          console.warn('Jotform chatbot not found. Ensure the script is loaded and the widget is rendered.');
+          console.warn('Jotform chatbot not found.');
         }
       }
     } catch (error) {
@@ -426,21 +320,20 @@ const First = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Modern Navbar with higher z-index and load animation */}
+    <div className="min-h-screen bg-gray-50 font-inter">
+      {/* Modern Navbar */}
       <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-white shadow-sm z-50 backdrop-blur-sm bg-opacity-80 animate__animated animate__fadeInDown">
         <div className="flex space-x-2">
           <button
-            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl"
+            className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg animate__animated animate__pulse animate__infinite animate__slow text-sm lg:text-base"
             aria-label="ChatApp Section"
           >
             ChatApp
           </button>
           
-          {/* Feature Dropdown with proper z-index hierarchy */}
           <div className="relative group z-40">
             <button
-              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center animate__animated animate__fadeIn text-lg lg:text-xl"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center animate__animated animate__fadeIn text-sm lg:text-base"
               aria-label="Feature Section"
             >
               Features
@@ -450,19 +343,19 @@ const First = () => {
             </button>
             <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-50 border border-gray-100 overflow-hidden">
               <ul className="py-2">
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base lg:text-lg">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-sm lg:text-base">
                   <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                   Real-Time Messaging
                 </li>
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base lg:text-lg">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-sm lg:text-base">
                   <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   Multi-Media
                 </li>
-                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-base lg:text-lg">
+                <li className="px-4 py-3 hover:bg-gray-50 transition-colors duration-150 flex items-center feature-item text-sm lg:text-base">
                   <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -473,7 +366,7 @@ const First = () => {
           </div>
           
           <button
-            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 animate__animated animate__fadeIn text-lg lg:text-xl"
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 animate__animated animate__fadeIn text-sm lg:text-base"
             aria-label="About Section"
           >
             About
@@ -482,7 +375,7 @@ const First = () => {
         
         <Link to="/login">
           <button
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl"
+            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center animate__animated animate__pulse animate__infinite animate__slow text-sm lg:text-base"
             aria-label="Login to ChatApp"
           >
             Login
@@ -493,24 +386,24 @@ const First = () => {
         </Link>
       </nav>
 
-      {/* Hero Sections with adjusted z-index */}
+      {/* Hero Sections */}
       <div className="pt-24 relative z-10">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
+          className="relative min-h-[250px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight content">
               Connect Instantly with <span className="text-blue-300">ChatApp</span>
             </h1>
-            <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-xl md:text-2xl lg:text-3xl mb-8 text-gray-100 leading-normal content">
               Experience seamless real-time messaging with friends and colleagues. Share moments, exchange ideas, and stay connected like never before.
             </p>
             <Link
               to="/login"
-              className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl content"
+              className="inline-block px-6 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base content"
             >
               Start Chatting Now
             </Link>
@@ -519,27 +412,27 @@ const First = () => {
 
         {/* Second Hero Section */}
         <div 
-          className="relative min-h-[300px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
+          className="relative min-h-[250px] flex items-center justify-center p-4 bg-cover bg-center rounded-xl overflow-hidden hero-section-2"
           style={{ backgroundImage: `url(${assets.webfront2})` }}
         >
           <div className="absolute inset-0 bg-purple-900 bg-opacity-50 backdrop-blur-sm rounded-xl"></div>
           <div className="relative z-20 text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate__animated animate__zoomIn content">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight content">
               More Than Just <span className="text-purple-300">Messages</span>
             </h1>
-            <p className="text-3xl md:text-4xl lg:text-5xl mb-8 text-gray-100 leading-normal animate__animated animate__zoomIn animate__delay-1s content">
+            <p className="text-xl md:text-2xl lg:text-3xl mb-8 text-gray-100 leading-normal content">
               Share photos, videos, and files effortlessly. Customize your profile and make every conversation uniquely yours.
             </p>
             <div className="flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="inline-block px-10 py-4 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl btn content"
+                className="inline-block px-6 py-2 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base btn content"
               >
                 Join Now
               </Link>
               <button 
                 onClick={toggleChatbot}
-                className="inline-block px-10 py-4 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl btn content"
+                className="inline-block px-6 py-2 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:bg-opacity-20 transition-colors duration-300 text-sm lg:text-base btn content"
               >
                 Learn More
               </button>
@@ -551,13 +444,13 @@ const First = () => {
       {/* Footer CTA */}
       <div className="py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white relative z-10 footer-cta">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate__animated animate__fadeInUp content">Ready to get started?</h2>
-          <p className="text-3xl md:text-4xl lg:text-5xl mb-6 max-w-2xl mx-auto leading-normal animate__animated animate__fadeInUp animate__delay-1s content">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 content">Ready to get started?</h2>
+          <p className="text-xl md:text-2xl lg:text-3xl mb-6 max-w-2xl mx-auto leading-normal content">
             Join thousands of happy users communicating effortlessly with ChatApp.
           </p>
           <Link
             to="/login"
-            className="inline-block px-10 py-4 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl animate__animated animate__pulse animate__infinite animate__slow text-lg lg:text-xl content"
+            className="inline-block px-6 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl text-sm lg:text-base content"
           >
             Sign Up Free
           </Link>
