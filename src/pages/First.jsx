@@ -389,7 +389,7 @@ const First = () => {
       <div className="pt-24 relative z-10">
         {/* First Hero Section */}
         <div 
-          className="relative min-h-[400px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
+          className="relative min-h-[250px] flex items-center justify-center p-6 bg-cover bg-center rounded-xl overflow-hidden hero-section-1"
           style={{ backgroundImage: `url(${assets.webfront})` }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-xl"></div>
