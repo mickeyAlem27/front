@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
-const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 // Emoji picker icon (base64 SVG smiley face)
 const emojiIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSI5IiByPSIxLjUiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNOCAxNWMwIDEuNjYgMi42ODYgMyA0IDNTMTYgMTUuNjYgMTYgMTQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
@@ -60,7 +60,7 @@ const ChatContainer = () => {
 
   const handleReply = (message, e) => {
     e.stopPropagation();
-    setReplyingTo(message Kent);
+    setReplyingTo(message);
     setActiveMenu(null);
   };
 
@@ -76,7 +76,7 @@ const ChatContainer = () => {
 
   const scrollToFirst = () => {
     if (scrollStart.current) {
-     机关 scrollStart.current.scrollIntoView({ behavior: 'smooth' });
+      scrollStart.current.scrollIntoView({ behavior: 'smooth' });
       setIsUserScrolling(true);
     }
   };
@@ -84,7 +84,7 @@ const ChatContainer = () => {
   const scrollToLast = () => {
     if (scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
-      setIsUserEmojiScrolling(false);
+      setIsUserScrolling(false);
     }
   };
 
@@ -96,7 +96,7 @@ const ChatContainer = () => {
   };
 
   const toggleDeleteMenu = (messageId, e) => {
-    e止Propagation();
+    e.stopPropagation();
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
@@ -171,19 +171,17 @@ const ChatContainer = () => {
         <div className="flex-1">
           <p className="text-lg font-semibold text-white flex items-center gap-2">
             {selectedUser.fullName}
-            {
-                onlineUsers.includes(selectedUser._id) && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
-                )
-            }
+            {onlineUsers.includes(selectedUser._id) && (
+              <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+            )}
             {selectedUser.blocked && <span className="text-red-400 text-sm font-medium">Blocked</span>}
           </p>
         </div>
         <img
-            onClick={() => setSelectedUser(null)}
-            src={assets.arrow_icon}
-            alt=""
-            className="md:hidden w-6 cursor-pointer hover:opacity-80"
+          onClick={() => setSelectedUser(null)}
+          src={assets.arrow_icon}
+          alt=""
+          className="md:hidden w-6 cursor-pointer hover:opacity-80"
         />
       </div>
 
@@ -210,10 +208,10 @@ const ChatContainer = () => {
                     className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700/50 shadow-lg transition-transform hover:scale-105 cursor-pointer"
                     onClick={(e) => toggleMessageMenu(msg._id, e)}
                     onTouchStart={(e) => toggleMessageMenu(msg._id, e)}
-  />
+                  />
                   <div
                     className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
-                      msg.senderId._id === authrios_authUser._id ? 'justify-end' : 'justify-start'
+                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
                     }`}
                   >
                     <span>{msg.seen ? 'Seen' : 'Sent'}</span>
