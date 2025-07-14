@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+// Emoji picker icon (base64 SVG smiley face)
+const emojiIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSI5IiByPSIxLjUiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNOCAxNWMwIDEuNjYgMi42ODYgMyA0IDNTMTYgMTUuNjYgMTYgMTQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
 const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
@@ -21,6 +23,7 @@ const ChatContainer = () => {
   const [isUserScrolling, setIsUserScrolling] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [deleteMenu, setDeleteMenu] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -55,8 +58,9 @@ const ChatContainer = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleReply = (message) => {
-    setReplyingTo(message);
+  const handleReply = (message, e) => {
+    e.stopPropagation();
+    setReplyingTo(message Kent);
     setActiveMenu(null);
   };
 
@@ -64,13 +68,15 @@ const ChatContainer = () => {
     setReplyingTo(null);
   };
 
-  const addEmoji = (emoji) => {
+  const addEmoji = (emoji, e) => {
+    e.stopPropagation();
     setInput((prev) => prev + emoji);
+    setShowEmojiPicker(false);
   };
 
   const scrollToFirst = () => {
     if (scrollStart.current) {
-      scrollStart.current.scrollIntoView({ behavior: 'smooth' });
+     机关 scrollStart.current.scrollIntoView({ behavior: 'smooth' });
       setIsUserScrolling(true);
     }
   };
@@ -78,7 +84,7 @@ const ChatContainer = () => {
   const scrollToLast = () => {
     if (scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
-      setIsUserScrolling(false);
+      setIsUserEmojiScrolling(false);
     }
   };
 
@@ -86,10 +92,11 @@ const ChatContainer = () => {
     e.stopPropagation();
     setActiveMenu(activeMenu === messageId ? null : messageId);
     setDeleteMenu(null);
+    setShowEmojiPicker(false);
   };
 
   const toggleDeleteMenu = (messageId, e) => {
-    e.stopPropagation();
+    e止Propagation();
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
@@ -103,6 +110,13 @@ const ChatContainer = () => {
     } catch (error) {
       toast.error("Failed to delete message");
     }
+  };
+
+  const toggleEmojiPicker = (e) => {
+    e.stopPropagation();
+    setShowEmojiPicker(!showEmojiPicker);
+    setActiveMenu(null);
+    setDeleteMenu(null);
   };
 
   useEffect(() => {
@@ -139,19 +153,38 @@ const ChatContainer = () => {
     }
   }, [messages, isUserScrolling]);
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setActiveMenu(null);
+      setDeleteMenu(null);
+      setShowEmojiPicker(false);
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return selectedUser ? (
-    <div className="h-full overflow-y-auto relative bg-gray-900/80 backdrop-blur-lg bg-gradient-to-b from-gray-900/90 to-gray-800/90 text-white">
+    <div className="h-full overflow-y-auto relative bg-gray-900/85 backdrop-blur-xl bg-gradient-to-b from-gray-900/90 to-gray-800/90 text-white">
       {/* Header */}
-      <div className="flex items-center gap-3 py-3 px-6 border-b border-gray-700/50 bg-gray-900/70 backdrop-blur-sm sticky top-0 z-10">
+      <div className="flex items-center gap-3 py-3 px-6 border-b border-gray-700/50 bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10">
         <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-8 rounded-full border-2 border-gray-600" />
         <div className="flex-1">
           <p className="text-lg font-semibold text-white flex items-center gap-2">
             {selectedUser.fullName}
-            {onlineUsers.includes(selectedUser._id) && <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>}
+            {
+                onlineUsers.includes(selectedUser._id) && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+                )
+            }
             {selectedUser.blocked && <span className="text-red-400 text-sm font-medium">Blocked</span>}
           </p>
         </div>
-        <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className="md:hidden w-6 cursor-pointer hover:opacity-80" />
+        <img
+            onClick={() => setSelectedUser(null)}
+            src={assets.arrow_icon}
+            alt=""
+            className="md:hidden w-6 cursor-pointer hover:opacity-80"
+        />
       </div>
 
       {/* Scrollable Message Container */}
@@ -176,10 +209,11 @@ const ChatContainer = () => {
                     alt=""
                     className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700/50 shadow-lg transition-transform hover:scale-105 cursor-pointer"
                     onClick={(e) => toggleMessageMenu(msg._id, e)}
-                  />
+                    onTouchStart={(e) => toggleMessageMenu(msg._id, e)}
+  />
                   <div
                     className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
-                      msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+                      msg.senderId._id === authrios_authUser._id ? 'justify-end' : 'justify-start'
                     }`}
                   >
                     <span>{msg.seen ? 'Seen' : 'Sent'}</span>
@@ -211,6 +245,7 @@ const ChatContainer = () => {
                         : 'bg-gray-700/50 text-gray-100 rounded-bl-none'
                     } hover:shadow-lg cursor-pointer`}
                     onClick={(e) => toggleMessageMenu(msg._id, e)}
+                    onTouchStart={(e) => toggleMessageMenu(msg._id, e)}
                   >
                     {msg.text}
                   </p>
@@ -238,10 +273,7 @@ const ChatContainer = () => {
                   }`}
                 >
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleReply(msg);
-                    }}
+                    onClick={(e) => handleReply(msg, e)}
                     className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-t-lg w-full text-left transition-colors"
                   >
                     Reply
@@ -311,7 +343,7 @@ const ChatContainer = () => {
       </div>
 
       {/* Message Input */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 p-4 bg-gray-900/70 backdrop-blur-sm border-t border-gray-700/50">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 p-4 bg-gray-900/80 backdrop-blur-sm border-t border-gray-700/50">
         <div className="flex-1 flex flex-col">
           {replyingTo && (
             <div className="bg-gray-700/30 p-3 rounded-t-xl border-l-4 border-violet-500 text-sm text-gray-300 flex flex-col">
@@ -324,18 +356,14 @@ const ChatContainer = () => {
             </div>
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative">
             <div className="flex gap-1.5">
-              {['❤️', '👍', '😎', '🚀'].map((emoji) => (
-                <button
-                  key={emoji}
-                  onClick={() => addEmoji(emoji)}
-                  className="text-lg hover:bg-gray-600/50 p-1.5 rounded-full transition-colors"
-                  disabled={selectedUser?.blocked}
-                >
-                  {emoji}
-                </button>
-              ))}
+              <img
+                src={emojiIcon}
+                alt="Emoji Picker"
+                className={`w-6 cursor-pointer hover:opacity-80 ${selectedUser?.blocked ? "opacity-50" : ""}`}
+                onClick={toggleEmojiPicker}
+              />
               <input
                 type="file"
                 id="image"
@@ -352,6 +380,34 @@ const ChatContainer = () => {
                 />
               </label>
             </div>
+            {showEmojiPicker && (
+              <div className="absolute bottom-12 left-0 bg-gray-800/95 rounded-lg shadow-2xl backdrop-blur-sm p-3 grid grid-cols-5 gap-2 z-30">
+                {['❤️', '👍', '👎', '😎', '😄', '🚀', '😍', '😂', '😢', '😊'].map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={(e) => addEmoji(emoji, e)}
+                    className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                    disabled={selectedUser?.blocked}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+                <button
+                  onClick={(e) => addEmoji('🎉', e)}
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                  disabled={selectedUser?.blocked}
+                >
+                  🎉
+                </button>
+                <button
+                  onClick={(e) => addEmoji('🎈', e)}
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                  disabled={selectedUser?.blocked}
+                >
+                  🎈
+                </button>
+              </div>
+            )}
             <div className="flex-1 flex items-center bg-gray-800/50 px-4 rounded-full border border-gray-700/50 focus-within:border-violet-500 transition-colors">
               <input
                 type="text"
@@ -380,7 +436,7 @@ const ChatContainer = () => {
       </div>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center gap-4 text-gray-400 bg-gradient-to-b from-gray-900/90 to-gray-800/90 h-full backdrop-blur-lg">
+    <div className="flex flex-col items-center justify-center gap-4 text-gray-400 bg-gradient-to-b from-gray-900/90 to-gray-800/90 h-full backdrop-blur-xl">
       <video
         src={assets.Message}
         className="max-h-[250px] w-auto rounded-xl shadow-lg border border-gray-700/50"
