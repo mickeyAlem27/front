@@ -82,16 +82,19 @@ const ChatContainer = () => {
     }
   };
 
-  const toggleMessageMenu = (messageId) => {
+  const toggleMessageMenu = (messageId, e) => {
+    e.stopPropagation();
     setActiveMenu(activeMenu === messageId ? null : messageId);
     setDeleteMenu(null);
   };
 
-  const toggleDeleteMenu = (messageId) => {
+  const toggleDeleteMenu = (messageId, e) => {
+    e.stopPropagation();
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
-  const handleDelete = async (messageId, deleteFor) => {
+  const handleDelete = async (messageId, deleteFor, e) => {
+    e.stopPropagation();
     try {
       await deleteMessage(messageId, deleteFor);
       setActiveMenu(null);
@@ -137,9 +140,9 @@ const ChatContainer = () => {
   }, [messages, isUserScrolling]);
 
   return selectedUser ? (
-    <div className="h-full overflow-y-auto relative bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+    <div className="h-full overflow-y-auto relative bg-gray-900/80 backdrop-blur-lg bg-gradient-to-b from-gray-900/90 to-gray-800/90 text-white">
       {/* Header */}
-      <div className="flex items-center gap-3 py-3 px-6 border-b border-gray-700 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-10">
+      <div className="flex items-center gap-3 py-3 px-6 border-b border-gray-700/50 bg-gray-900/70 backdrop-blur-sm sticky top-0 z-10">
         <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-8 rounded-full border-2 border-gray-600" />
         <div className="flex-1">
           <p className="text-lg font-semibold text-white flex items-center gap-2">
@@ -162,10 +165,8 @@ const ChatContainer = () => {
           <div
             key={msg._id}
             className={`flex items-end gap-3 mb-6 ${
-              msg.senderId._id === authUser._id ? 'justify-end flex-row-reverse' : 'justify-start'
+              msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
             } group relative`}
-            onClick={() => toggleMessageMenu(msg._id)}
-            onTouchStart={() => toggleMessageMenu(msg._id)}
           >
             <div className="relative max-w-[70%] sm:max-w-[60%]">
               {msg.image ? (
@@ -173,7 +174,8 @@ const ChatContainer = () => {
                   <img
                     src={msg.image}
                     alt=""
-                    className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700 shadow-lg transition-transform hover:scale-105"
+                    className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700/50 shadow-lg transition-transform hover:scale-105 cursor-pointer"
+                    onClick={(e) => toggleMessageMenu(msg._id, e)}
                   />
                   <div
                     className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
@@ -205,9 +207,10 @@ const ChatContainer = () => {
                   <p
                     className={`p-4 text-sm font-light rounded-xl break-words shadow-md transition-all duration-200 ${
                       msg.senderId._id === authUser._id
-                        ? 'bg-violet-600/80 text-white rounded-br-none'
+                        ? 'bg-violet-600/90 text-white rounded-br-none'
                         : 'bg-gray-700/50 text-gray-100 rounded-bl-none'
-                    } hover:shadow-lg`}
+                    } hover:shadow-lg cursor-pointer`}
+                    onClick={(e) => toggleMessageMenu(msg._id, e)}
                   >
                     {msg.text}
                   </p>
@@ -245,10 +248,7 @@ const ChatContainer = () => {
                   </button>
                   {msg.senderId._id === authUser._id && (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleDeleteMenu(msg._id);
-                      }}
+                      onClick={(e) => toggleDeleteMenu(msg._id, e)}
                       className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-b-lg w-full text-left transition-colors"
                     >
                       Delete
@@ -261,19 +261,13 @@ const ChatContainer = () => {
                       }`}
                     >
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(msg._id, 'me');
-                        }}
+                        onClick={(e) => handleDelete(msg._id, 'me', e)}
                         className="block px-3 py-2 hover:bg-violet-600/50 rounded-t-lg w-full text-left transition-colors"
                       >
                         Delete for Me
                       </button>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(msg._id, 'everyone');
-                        }}
+                        onClick={(e) => handleDelete(msg._id, 'everyone', e)}
                         className="block px-3 py-2 hover:bg-violet-600/50 rounded-b-lg w-full text-left transition-colors"
                       >
                         Delete for Everyone
@@ -317,7 +311,7 @@ const ChatContainer = () => {
       </div>
 
       {/* Message Input */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 p-4 bg-gray-900/50 backdrop-blur-sm border-t border-gray-700">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 p-4 bg-gray-900/70 backdrop-blur-sm border-t border-gray-700/50">
         <div className="flex-1 flex flex-col">
           {replyingTo && (
             <div className="bg-gray-700/30 p-3 rounded-t-xl border-l-4 border-violet-500 text-sm text-gray-300 flex flex-col">
@@ -327,73 +321,73 @@ const ChatContainer = () => {
                 </p>
                 <button onClick={cancelReply} className="text-red-400 text-sm font-medium hover:text-red-500">Cancel</button>
               </div>
-              <div className="flex gap-2 mt-2">
-                {['❤️', '👍', '👎', '😎', '😄', '🚀'].map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={() => addEmoji(emoji)}
-                    className="text-lg hover:bg-gray-600/50 p-1.5 rounded-full transition-colors"
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
-          <div className="flex items-center bg-gray-800/50 px-4 rounded-full border border-gray-700 focus-within:border-violet-500 transition-colors">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
-              placeholder={
-                selectedUser?.blocked
-                  ? "Cannot message a blocked user"
-                  : replyingTo
-                  ? "Type your reply..."
-                  : "Send a message"
-              }
-              className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent"
-              disabled={selectedUser?.blocked}
-            />
-
-            <input
-              type="file"
-              id="image"
-              accept="image/png, image/jpeg"
-              hidden
-              onChange={handleSendImage}
-              disabled={selectedUser?.blocked}
-            />
-
-            <label htmlFor="image">
-              <img
-                src={assets.gallery_icon}
-                alt="Upload"
-                className={`w-5 mr-2 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer hover:opacity-80"}`}
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5">
+              {['❤️', '👍', '😎', '🚀'].map((emoji) => (
+                <button
+                  key={emoji}
+                  onClick={() => addEmoji(emoji)}
+                  className="text-lg hover:bg-gray-600/50 p-1.5 rounded-full transition-colors"
+                  disabled={selectedUser?.blocked}
+                >
+                  {emoji}
+                </button>
+              ))}
+              <input
+                type="file"
+                id="image"
+                accept="image/png, image/jpeg, image/gif"
+                hidden
+                onChange={handleSendImage}
+                disabled={selectedUser?.blocked}
               />
-            </label>
+              <label htmlFor="image">
+                <img
+                  src={assets.gallery_icon}
+                  alt="Upload"
+                  className={`w-5 cursor-pointer hover:opacity-80 ${selectedUser?.blocked ? "opacity-50" : ""}`}
+                />
+              </label>
+            </div>
+            <div className="flex-1 flex items-center bg-gray-800/50 px-4 rounded-full border border-gray-700/50 focus-within:border-violet-500 transition-colors">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
+                placeholder={
+                  selectedUser?.blocked
+                    ? "Cannot message a blocked user"
+                    : replyingTo
+                    ? "Type your reply..."
+                    : "Send a message"
+                }
+                className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent"
+                disabled={selectedUser?.blocked}
+              />
+            </div>
+            <img
+              onClick={handleSendMessage}
+              src={assets.send_button}
+              alt="Send"
+              className={`w-8 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer hover:scale-110 transition-transform"}`}
+            />
           </div>
         </div>
-
-        <img
-          onClick={handleSendMessage}
-          src={assets.send_button}
-          alt="Send"
-          className={`w-8 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer hover:scale-110 transition-transform"}`}
-        />
       </div>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center gap-4 text-gray-400 bg-gradient-to-b from-gray-900 to-gray-800 h-full">
+    <div className="flex flex-col items-center justify-center gap-4 text-gray-400 bg-gradient-to-b from-gray-900/90 to-gray-800/90 h-full backdrop-blur-lg">
       <video
         src={assets.Message}
-        className="max-h-[250px] w-auto rounded-xl shadow-lg border border-gray-700"
+        className="max-h-[250px] w-auto rounded-xl shadow-lg border border-gray-700/50"
         autoPlay
         loop
         muted
-  >
+      >
         <source src={assets.Sample} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
