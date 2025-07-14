@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
-const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 // Emoji picker icon (base64 SVG smiley face)
 const emojiIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSI5IiByPSIxLjUiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNOCAxNWMwIDEuNjYgMi42ODYgMyA0IDNTMTYgMTUuNjYgMTYgMTQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
@@ -119,6 +119,13 @@ const ChatContainer = () => {
     setDeleteMenu(null);
   };
 
+  const handleSingleClick = (e) => {
+    e.stopPropagation();
+    setActiveMenu(null);
+    setDeleteMenu(null);
+    setShowEmojiPicker(false);
+  };
+
   useEffect(() => {
     const container = messageContainerRef.current;
     if (!container) return;
@@ -198,6 +205,21 @@ const ChatContainer = () => {
             className={`flex items-end gap-3 mb-6 ${
               msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
             } group relative`}
+            onClick={handleSingleClick}
+            onDoubleClick={(e) => toggleMessageMenu(msg._id, e)}
+            onTouchStart={(e) => {
+              // Handle double-tap for mobile
+              let touchTimer;
+              if (e.target.dataset.touched) {
+                clearTimeout(touchTimer);
+                toggleMessageMenu(msg._id, e);
+              } else {
+                e.target.dataset.touched = true;
+                touchTimer = setTimeout(() => {
+                  delete e.target.dataset.touched;
+                }, 300); // Double-tap within 300ms
+              }
+            }}
           >
             <div className="relative max-w-[70%] sm:max-w-[60%]">
               {msg.image ? (
@@ -206,8 +228,6 @@ const ChatContainer = () => {
                     src={msg.image}
                     alt=""
                     className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700/50 shadow-lg transition-transform hover:scale-105 cursor-pointer"
-                    onClick={(e) => toggleMessageMenu(msg._id, e)}
-                    onTouchStart={(e) => toggleMessageMenu(msg._id, e)}
                   />
                   <div
                     className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
@@ -242,8 +262,6 @@ const ChatContainer = () => {
                         ? 'bg-violet-600/90 text-white rounded-br-none'
                         : 'bg-gray-700/50 text-gray-100 rounded-bl-none'
                     } hover:shadow-lg cursor-pointer`}
-                    onClick={(e) => toggleMessageMenu(msg._id, e)}
-                    onTouchStart={(e) => toggleMessageMenu(msg._id, e)}
                   >
                     {msg.text}
                   </p>
@@ -379,12 +397,16 @@ const ChatContainer = () => {
               </label>
             </div>
             {showEmojiPicker && (
-              <div className="absolute bottom-12 left-0 bg-gray-800/95 rounded-lg shadow-2xl backdrop-blur-sm p-3 grid grid-cols-5 gap-2 z-30">
+              <div
+                className={`absolute bottom-12 left-0 bg-gray-800/95 rounded-lg shadow-2xl backdrop-blur-sm p-3 grid grid-cols-5 gap-2 z-30 transform transition-all duration-300 ease-in-out ${
+                  showEmojiPicker ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+                }`}
+              >
                 {['❤️', '👍', '👎', '😎', '😄', '🚀', '😍', '😂', '😢', '😊'].map((emoji) => (
                   <button
                     key={emoji}
                     onClick={(e) => addEmoji(emoji, e)}
-                    className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                    className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
                     disabled={selectedUser?.blocked}
                   >
                     {emoji}
@@ -392,14 +414,14 @@ const ChatContainer = () => {
                 ))}
                 <button
                   onClick={(e) => addEmoji('🎉', e)}
-                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
                   disabled={selectedUser?.blocked}
                 >
                   🎉
                 </button>
                 <button
                   onClick={(e) => addEmoji('🎈', e)}
-                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-colors"
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
                   disabled={selectedUser?.blocked}
                 >
                   🎈
