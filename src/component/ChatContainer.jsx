@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 // Placeholder SVG icons (base64) for single and double checkmarks
 const singleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMkwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 const doubleCheckIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzljYTViOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNiAxMmwxMCAxNiAxOCA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM9Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xMCAxMkwxNCAxNiAyMiA4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2E1YjgiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
+// Emoji picker icon (base64 SVG smiley face)
+const emojiIcon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSI5IiByPSIxLjUiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNOCAxNWMwIDEuNjYgMi42ODYgMyA0IDNTMTYgMTUuNjYgMTYgMTQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==';
 
 const ChatContainer = () => {
   const { messages, selectedUser, setSelectedUser, sendMessage, getMessages, deleteMessage } = useContext(ChatContext);
@@ -19,7 +21,9 @@ const ChatContainer = () => {
   const [input, setInput] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
-  const [deleteMenu, setDeleteMenu] = useState(null); // Track which message's delete menu is open
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [deleteMenu, setDeleteMenu] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -31,7 +35,7 @@ const ChatContainer = () => {
     await sendMessage({ text: input.trim(), replyTo: replyingTo?._id });
     setInput("");
     setReplyingTo(null);
-    setIsUserScrolling(false); // Allow auto-scroll after sending a message
+    setIsUserScrolling(false);
   };
 
   const handleSendImage = async (e) => {
@@ -49,28 +53,27 @@ const ChatContainer = () => {
       await sendMessage({ image: reader.result, replyTo: replyingTo?._id });
       setReplyingTo(null);
       e.target.value = "";
-      setIsUserScrolling(false); // Allow auto-scroll after sending an image
+      setIsUserScrolling(false);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleReply = (message) => {
-    console.log("Opening reply for message:", message._id);
+  const handleReply = (message, e) => {
+    e.stopPropagation();
     setReplyingTo(message);
+    setActiveMenu(null);
   };
 
   const cancelReply = () => {
-    console.log("Canceling reply");
     setReplyingTo(null);
   };
 
-  // Add emoji to input field
-  const addEmoji = (emoji) => {
-    console.log("Adding emoji:", emoji);
+  const addEmoji = (emoji, e) => {
+    e.stopPropagation();
     setInput((prev) => prev + emoji);
+    setShowEmojiPicker(false);
   };
 
-  // Scroll to first message
   const scrollToFirst = () => {
     if (scrollStart.current) {
       scrollStart.current.scrollIntoView({ behavior: 'smooth' });
@@ -78,7 +81,6 @@ const ChatContainer = () => {
     }
   };
 
-  // Scroll to last message
   const scrollToLast = () => {
     if (scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
@@ -86,33 +88,57 @@ const ChatContainer = () => {
     }
   };
 
+<<<<<<< HEAD
   // Toggle delete menu for a specific message
   const toggleDeleteMenu = (messageId) => {
     console.log(`Toggling delete menu for message: ${messageId}, Current deleteMenu: ${deleteMenu}`);
+=======
+  const toggleMessageMenu = (messageId, e) => {
+    e.stopPropagation();
+    setActiveMenu(activeMenu === messageId ? null : messageId);
+    setDeleteMenu(null);
+    setShowEmojiPicker(false);
+  };
+
+  const toggleDeleteMenu = (messageId, e) => {
+    e.stopPropagation();
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
-  // Handle delete action
-  const handleDelete = async (messageId, deleteFor) => {
-    console.log(`Deleting message ${messageId} with deleteFor=${deleteFor}`);
+  const handleDelete = async (messageId, deleteFor, e) => {
+    e.stopPropagation();
     try {
       await deleteMessage(messageId, deleteFor);
+      setActiveMenu(null);
       setDeleteMenu(null);
       toast.success(`Message deleted ${deleteFor === 'me' ? 'for you' : 'for everyone'}`);
     } catch (error) {
-      console.error("Error in handleDelete:", error);
       toast.error("Failed to delete message");
     }
   };
 
-  // Detect manual scrolling or touch to prevent auto-scroll
+  const toggleEmojiPicker = (e) => {
+    e.stopPropagation();
+    setShowEmojiPicker(!showEmojiPicker);
+    setActiveMenu(null);
+    setDeleteMenu(null);
+  };
+
+  const handleSingleClick = (e) => {
+    e.stopPropagation();
+    setActiveMenu(null);
+    setDeleteMenu(null);
+    setShowEmojiPicker(false);
+  };
+
   useEffect(() => {
     const container = messageContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px tolerance
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
       setIsUserScrolling(!isAtBottom);
     };
 
@@ -128,142 +154,192 @@ const ChatContainer = () => {
     };
   }, []);
 
-  // Fetch messages when user is selected
   useEffect(() => {
     if (selectedUser) {
-      console.log("Fetching messages for user:", selectedUser._id);
       getMessages(selectedUser._id);
     }
   }, [selectedUser, getMessages]);
 
-  // Auto-scroll to latest message if not manually scrolling
   useEffect(() => {
     if (!isUserScrolling && scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isUserScrolling]);
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setActiveMenu(null);
+      setDeleteMenu(null);
+      setShowEmojiPicker(false);
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return selectedUser ? (
-    <div className="h-full overflow-y-auto relative backdrop-blur-lg">
+    <div className="h-full overflow-y-auto relative bg-gray-900/85 backdrop-blur-xl bg-gradient-to-b from-gray-900/90 to-gray-800/90 text-white">
       {/* Header */}
-      <div className="flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-4 sm:px-6 border-b border-stone-500">
-        <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-6 sm:w-8 rounded-full" />
-        <p className="flex-1 text-base sm:text-lg text-white flex items-center gap-1 sm:gap-2">
-          {selectedUser.fullName}
-          {onlineUsers.includes(selectedUser._id) && <span className="w-2 h-2 rounded-full bg-green-500"></span>}
-          {selectedUser.blocked && <span className="text-red-500 text-xs sm:text-sm">Blocked</span>}
-        </p>
-        <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className="md:hidden w-5 sm:w-7 cursor-pointer" />
+      <div className="flex items-center gap-3 py-3 px-6 border-b border-gray-700/50 bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10">
+        <img src={selectedUser.profilePic || assets.avatar_icon} alt="" className="w-8 rounded-full border-2 border-gray-600" />
+        <div className="flex-1">
+          <p className="text-lg font-semibold text-white flex items-center gap-2">
+            {selectedUser.fullName}
+            {onlineUsers.includes(selectedUser._id) && (
+              <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+            )}
+            {selectedUser.blocked && <span className="text-red-400 text-sm font-medium">Blocked</span>}
+          </p>
+        </div>
+        <img
+          onClick={() => setSelectedUser(null)}
+          src={assets.arrow_icon}
+          alt=""
+          className="md:hidden w-6 cursor-pointer hover:opacity-80"
+        />
       </div>
 
       {/* Scrollable Message Container */}
       <div
         ref={messageContainerRef}
-        className="flex flex-col h-[calc(100%-110px)] sm:h-[calc(100%-120px)] overflow-y-auto p-4 sm:p-6 pb-16 sm:pb-12 scroll-smooth"
+        className="flex flex-col h-[calc(100%-130px)] p-6 pb-16 scroll-smooth overflow-y-auto"
       >
-        {/* Dummy div for scrolling to the top */}
         <div ref={scrollStart} />
 
         {messages.map((msg) => (
           <div
             key={msg._id}
-            className={`flex items-end gap-2 sm:gap-3 mb-4 ${
-              msg.senderId._id === authUser._id ? 'justify-end flex-row-reverse' : 'justify-start flex-row-reverse'
-            }`}
+            className={`flex items-end gap-3 mb-6 ${
+              msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
+            } group relative`}
+            onClick={handleSingleClick}
+            onDoubleClick={(e) => toggleMessageMenu(msg._id, e)}
+            onTouchStart={(e) => {
+              // Handle double-tap for mobile
+              let touchTimer;
+              if (e.target.dataset.touched) {
+                clearTimeout(touchTimer);
+                toggleMessageMenu(msg._id, e);
+              } else {
+                e.target.dataset.touched = true;
+                touchTimer = setTimeout(() => {
+                  delete e.target.dataset.touched;
+                }, 300); // Double-tap within 300ms
+              }
+            }}
           >
-            <div className="relative group">
+            <div className="relative max-w-[70%] sm:max-w-[60%]">
               {msg.image ? (
                 <div className="flex flex-col">
                   <img
                     src={msg.image}
                     alt=""
-                    className="max-w-[150px] sm:max-w-[200px] md:max-w-[230px] border border-gray-700 rounded-lg mb-2"
+                    className="max-w-[200px] md:max-w-[250px] rounded-xl border border-gray-700/50 shadow-lg transition-transform hover:scale-105 cursor-pointer"
                   />
                   <div
-                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                    className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
                       msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
                     }`}
                   >
-                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <span>{msg.seen ? 'Seen' : 'Sent'}</span>
                     <img
                       src={msg.seen ? doubleCheckIcon : singleCheckIcon}
-                      alt={msg.seen ? 'Seen' : 'Send'}
-                      className="w-4 h-4"
-                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                      alt={msg.seen ? 'Seen' : 'Sent'}
+                      className="w-4 h-4 opacity-80"
                     />
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col mb-8 sm:mb-10">
+                <div className="flex flex-col">
                   {msg.replyTo && (
-                    <div className="bg-gray-700/50 p-2 sm:p-3 rounded-t-lg text-xs sm:text-sm text-gray-300">
-                      <p>
+                    <div className="bg-gray-700/30 p-3 rounded-t-xl border-l-4 border-violet-500 text-sm text-gray-300 mb-1">
+                      <p className="font-medium">
                         Replying to {msg.replyTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}:
                       </p>
                       {msg.replyTo.image ? (
                         <img src={msg.replyTo.image} alt="" className="max-w-[100px] rounded mt-1" />
                       ) : (
-                        <p className="truncate max-w-[200px]">{msg.replyTo.text}</p>
+                        <p className="truncate max-w-[200px] text-gray-400">{msg.replyTo.text}</p>
                       )}
                     </div>
                   )}
                   <p
-                    className={`p-3 max-w-[200px] sm:max-w-[250px] text-sm font-light rounded-lg break-all bg-violet-500/30 text-white 
-                      ${msg.senderId._id === authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}
+                    className={`p-4 text-sm font-light rounded-xl break-words shadow-md transition-all duration-200 ${
+                      msg.senderId._id === authUser._id
+                        ? 'bg-violet-600/90 text-white rounded-br-none'
+                        : 'bg-gray-700/50 text-gray-100 rounded-bl-none'
+                    } hover:shadow-lg cursor-pointer`}
                   >
                     {msg.text}
                   </p>
                   <div
-                    className={`flex items-center gap-1 text-xs text-gray-300 mt-1 ${
+                    className={`flex items-center gap-1.5 text-xs text-gray-400 mt-2 ${
                       msg.senderId._id === authUser._id ? 'justify-end' : 'justify-start'
                     }`}
                   >
-                    <span>{msg.seen ? 'Seen' : 'Send'}</span>
+                    <span>{msg.seen ? 'Seen' : 'Sent'}</span>
                     <img
                       src={msg.seen ? doubleCheckIcon : singleCheckIcon}
-                      alt={msg.seen ? 'Seen' : 'Send'}
-                      className="w-4 h-4"
-                      onError={() => console.error(`${msg.seen ? 'Double' : 'Single'} check icon failed to load`)}
+                      alt={msg.seen ? 'Seen' : 'Sent'}
+                      className="w-4 h-4 opacity-80"
                     />
                   </div>
                 </div>
               )}
 
-              {!msg.isDeleted && (
+              {!msg.isDeleted && activeMenu === msg._id && (
                 <div
                   className={`absolute top-0 z-20 ${
                     msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
+<<<<<<< HEAD
                   } bg-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-lg transition-all duration-200 ease-in-out`}
                 >
                   <button
                     onClick={() => handleReply(msg)}
                     className="block px-4 py-2 hover:bg-gray-700 rounded-t-lg w-full text-left"
+=======
+                  } bg-gray-800/95 text-white text-sm rounded-lg shadow-2xl backdrop-blur-sm transition-all duration-200 ease-in-out transform ${
+                    activeMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+                  }`}
+                >
+                  <button
+                    onClick={(e) => handleReply(msg, e)}
+                    className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-t-lg w-full text-left transition-colors"
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                   >
                     Reply
                   </button>
                   {msg.senderId._id === authUser._id && (
                     <button
+<<<<<<< HEAD
                       onClick={() => toggleDeleteMenu(msg._id)}
                       className="block px-4 py-2 hover:bg-gray-700 rounded-b-lg w-full text-left"
+=======
+                      onClick={(e) => toggleDeleteMenu(msg._id, e)}
+                      className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-b-lg w-full text-left transition-colors"
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                     >
                       Delete
                     </button>
                   )}
                   {msg.senderId._id === authUser._id && deleteMenu === msg._id && (
                     <div
+<<<<<<< HEAD
                       className={`absolute right-0 mt-1 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-xl border border-gray-700 transform scale-95 transition-transform duration-200 ease-in-out z-30 ${
+=======
+                      className={`absolute right-0 mt-1 bg-gray-900/95 text-white text-xs rounded-lg shadow-2xl backdrop-blur-sm transition-all duration-200 ease-in-out z-30 transform ${
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                         deleteMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                       }`}
                     >
                       <button
-                        onClick={() => handleDelete(msg._id, 'me')}
-                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-t-lg transition-colors duration-200"
+                        onClick={(e) => handleDelete(msg._id, 'me', e)}
+                        className="block px-3 py-2 hover:bg-violet-600/50 rounded-t-lg w-full text-left transition-colors"
                       >
                         Delete for Me
                       </button>
                       <button
-                        onClick={() => handleDelete(msg._id, 'everyone')}
-                        className="block px-4 py-2 hover:bg-violet-600/50 w-full text-left rounded-b-lg transition-colors duration-200"
+                        onClick={(e) => handleDelete(msg._id, 'everyone', e)}
+                        className="block px-3 py-2 hover:bg-violet-600/50 rounded-b-lg w-full text-left transition-colors"
                       >
                         Delete for Everyone
                       </button>
@@ -272,7 +348,7 @@ const ChatContainer = () => {
                 </div>
               )}
             </div>
-            <div className="text-center text-xs sm:text-sm">
+            <div className="text-center text-xs">
               <img
                 src={
                   msg.senderId._id === authUser._id
@@ -280,9 +356,9 @@ const ChatContainer = () => {
                     : selectedUser?.profilePic || assets.avatar_icon
                 }
                 alt=""
-                className="w-6 sm:w-7 rounded-full"
+                className="w-7 rounded-full border border-gray-600"
               />
-              <p className="text-gray-500">{formatMessageTime(msg.createdAt)}</p>
+              <p className="text-gray-500 mt-1">{formatMessageTime(msg.createdAt)}</p>
             </div>
           </div>
         ))}
@@ -290,30 +366,31 @@ const ChatContainer = () => {
       </div>
 
       {/* Scroll Control Buttons */}
-      <div className="absolute bottom-20 right-4 flex flex-col gap-2">
+      <div className="absolute bottom-24 right-4 flex flex-col gap-2">
         <button
           onClick={scrollToFirst}
-          className="p-2 bg-violet-500 text-white rounded-full hover:bg-violet-600 text-sm"
+          className="p-2 bg-violet-600 text-white rounded-full hover:bg-violet-700 shadow-lg transition-all duration-200 hover:scale-105"
         >
-          ↑ Top
+          ↑
         </button>
         <button
           onClick={scrollToLast}
-          className="p-2 bg-violet-500 text-white rounded-full hover:bg-violet-600 text-sm"
+          className="p-2 bg-violet-600 text-white rounded-full hover:bg-violet-700 shadow-lg transition-all duration-200 hover:scale-105"
         >
-          ↓ Bottom
+          ↓
         </button>
       </div>
 
       {/* Message Input */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 p-4 bg-gray-900/80 backdrop-blur-sm border-t border-gray-700/50">
         <div className="flex-1 flex flex-col">
           {replyingTo && (
-            <div className="bg-gray-700/50 p-3 rounded-t-lg text-sm text-gray-300 flex flex-col">
+            <div className="bg-gray-700/30 p-3 rounded-t-xl border-l-4 border-violet-500 text-sm text-gray-300 flex flex-col">
               <div className="flex items-center">
-                <p className="flex-1 truncate">
-                  ❤️👍👎😎😄🚀 Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
+                <p className="flex-1 truncate font-medium">
+                  Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
                 </p>
+<<<<<<< HEAD
                 <button onClick={cancelReply} className="text-red-500 text-sm">Cancel</button>
               </div>
               <div className="flex gap-2 mt-2">
@@ -323,10 +400,14 @@ const ChatContainer = () => {
                 <button onClick={() => addEmoji('😎')} className="text-lg hover:bg-gray-600 p-1 rounded">😎</button>
                 <button onClick={() => addEmoji('😄')} className="text-lg hover:bg-gray-600 p-1 rounded">😄</button>
                 <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded-full">🚖</button>
+=======
+                <button onClick={cancelReply} className="text-red-400 text-sm font-medium hover:text-red-500">Cancel</button>
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
               </div>
             </div>
           )}
 
+<<<<<<< HEAD
           <div className="flex items-center bg-gray-100/12 px-4 rounded-full">
             <input
               type="text"
@@ -354,37 +435,112 @@ const ChatContainer = () => {
             />
 
             <label htmlFor="image">
+=======
+          <div className="flex items-center gap-2 relative">
+            <div className="flex gap-1.5">
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
               <img
-                src={assets.gallery_icon}
-                alt="Upload"
-                className={`w-5 mr-2 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer"}`}
+                src={emojiIcon}
+                alt="Emoji Picker"
+                className={`w-6 cursor-pointer hover:opacity-80 ${selectedUser?.blocked ? "opacity-50" : ""}`}
+                onClick={toggleEmojiPicker}
               />
-            </label>
+              <input
+                type="file"
+                id="image"
+                accept="image/png, image/jpeg, image/gif"
+                hidden
+                onChange={handleSendImage}
+                disabled={selectedUser?.blocked}
+              />
+              <label htmlFor="image">
+                <img
+                  src={assets.gallery_icon}
+                  alt="Upload"
+                  className={`w-5 cursor-pointer hover:opacity-80 ${selectedUser?.blocked ? "opacity-50" : ""}`}
+                />
+              </label>
+            </div>
+            {showEmojiPicker && (
+              <div
+                className={`absolute bottom-12 left-0 bg-gray-800/95 rounded-lg shadow-2xl backdrop-blur-sm p-3 grid grid-cols-5 gap-2 z-30 transform transition-all duration-300 ease-in-out ${
+                  showEmojiPicker ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+                }`}
+              >
+                {['❤️', '👍', '👎', '😎', '😄', '🚀', '😍', '😂', '😢', '😊'].map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={(e) => addEmoji(emoji, e)}
+                    className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
+                    disabled={selectedUser?.blocked}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+                <button
+                  onClick={(e) => addEmoji('🎉', e)}
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
+                  disabled={selectedUser?.blocked}
+                >
+                  🎉
+                </button>
+                <button
+                  onClick={(e) => addEmoji('🎈', e)}
+                  className="text-lg hover:bg-violet-600/50 p-1.5 rounded-full transition-transform duration-200 transform hover:scale-125 disabled:opacity-50"
+                  disabled={selectedUser?.blocked}
+                >
+                  🎈
+                </button>
+              </div>
+            )}
+            <div className="flex-1 flex items-center bg-gray-800/50 px-4 rounded-full border border-gray-700/50 focus-within:border-violet-500 transition-colors">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
+                placeholder={
+                  selectedUser?.blocked
+                    ? "Cannot message a blocked user"
+                    : replyingTo
+                    ? "Type your reply..."
+                    : "Send a message"
+                }
+                className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent"
+                disabled={selectedUser?.blocked}
+              />
+            </div>
+            <img
+              onClick={handleSendMessage}
+              src={assets.send_button}
+              alt="Send"
+              className={`w-8 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer hover:scale-110 transition-transform"}`}
+            />
           </div>
         </div>
-
-        <img
-          onClick={handleSendMessage}
-          src={assets.send_button}
-          alt="Send"
-          className={`w-7 ${selectedUser?.blocked ? "opacity-50" : "cursor-pointer"}`}
-        />
       </div>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 md:min-w-[300px] h-full">
+    <div className="flex flex-col items-center justify-center gap-4 text-gray-400 bg-gradient-to-b from-gray-900/90 to-gray-800/90 h-full backdrop-blur-xl">
       <video
         src={assets.Message}
-        className="max-h-[200px] sm:max-h-[250px] md:max-h-[300px] w-auto rounded-lg mx-auto"
+        className="max-h-[250px] w-auto rounded-xl shadow-lg border border-gray-700/50"
         autoPlay
         loop
         muted
+<<<<<<< HEAD
         onError={(e) => console.log('Video failed to load error: ', e)}
+=======
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
       >
         <source src={assets.Sample} type="video/mp4" />
         Your browser does not support this video tag.
       </video>
+<<<<<<< HEAD
       <p className="text-lg font-medium text-center">Feel free to chat</p>
+=======
+      <p className="text-lg font-semibold text-white">Start a conversation</p>
+>>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
     </div>
   );
 };

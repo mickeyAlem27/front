@@ -1,24 +1,22 @@
+import tailwindMotion from 'tailwindcss-motion'
 
-export default  {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // Add your source folders here
-    "./public/index.html"
-  ],
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      keyframes: {
-        
-        rumbo: {
-            
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        },
-      },
       animation: {
-        
-        rumbo: 'rumbo 0.5s ease-in-out infinite',
+        rombo: "rombo 2s infinite ease-in-out",
+      },
+      keyframes: {
+        rombo: {
+          "0%, 100%": { transform: "rotate(0deg) scale(1)" },
+          "50%": { transform: "rotate(45deg) scale(1.2)" },
+        },
       },
     },
   },
-  plugins: [],
-};
+  plugins: [
+    tailwindMotion
+  ],
+}

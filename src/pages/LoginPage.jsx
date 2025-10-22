@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
   const [bio, setBio] = useState('');
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,14 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Validate password match for signup
+    if (!isLogin && password !== confirmPassword) {
+      toast.error('Passwords do not match!');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const success = await login(isLogin ? 'login' : 'signup', {
         fullName,
@@ -31,9 +40,9 @@ const LoginPage = () => {
         password,
         bio,
       });
-      
+
       if (success) {
-        // AuthContext will trigger the redirection through the isAuthenticated change
+        // AuthContext will handle redirection
       }
     } catch (error) {
       toast.error(error.message);
@@ -62,14 +71,16 @@ const LoginPage = () => {
       <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-violet-600/20 transform rotate-45 animate-float origin-center"></div>
       <div className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-indigo-600/20 transform rotate-45 animate-float-delay origin-center"></div>
       <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-purple-600/20 transform rotate-45 animate-float-delay-2 origin-center"></div>
-      
+
       {/* Form container with entrance animation */}
-      <div className={`
+      <div
+        className={`
         bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl w-full max-w-md z-10 
         border border-gray-700/50 shadow-2xl
         transform transition-all duration-1000 ease-out
         ${mounted ? 'translate-x-0 opacity-100' : 'translate-x-[150%] opacity-0'}
-      `}>
+      `}
+      >
         <h2 className="text-2xl text-white font-bold text-center mb-6">
           {isLogin ? 'Login' : 'Sign Up'}
         </h2>
@@ -113,6 +124,20 @@ const LoginPage = () => {
             />
           </div>
           {!isLogin && (
+            <div className="mb-4 transition-all duration-700 delay-175">
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                className="w-full p-3 rounded-lg bg-gray-700/80 text-white placeholder-gray-400 outline-none 
+                focus:ring-2 focus:ring-violet-500 transition-all duration-300"
+                required={!isLogin}
+                aria-label="Confirm Password"
+              />
+            </div>
+          )}
+          {!isLogin && (
             <div className="mb-4 transition-all duration-700 delay-200">
               <textarea
                 value={bio}
@@ -136,9 +161,25 @@ const LoginPage = () => {
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Processing...
                 </span>
