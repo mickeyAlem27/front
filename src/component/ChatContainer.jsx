@@ -88,11 +88,6 @@ const ChatContainer = () => {
     }
   };
 
-<<<<<<< HEAD
-  // Toggle delete menu for a specific message
-  const toggleDeleteMenu = (messageId) => {
-    console.log(`Toggling delete menu for message: ${messageId}, Current deleteMenu: ${deleteMenu}`);
-=======
   const toggleMessageMenu = (messageId, e) => {
     e.stopPropagation();
     setActiveMenu(activeMenu === messageId ? null : messageId);
@@ -102,7 +97,6 @@ const ChatContainer = () => {
 
   const toggleDeleteMenu = (messageId, e) => {
     e.stopPropagation();
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
     setDeleteMenu(deleteMenu === messageId ? null : messageId);
   };
 
@@ -290,13 +284,6 @@ const ChatContainer = () => {
                 <div
                   className={`absolute top-0 z-20 ${
                     msg.senderId._id === authUser._id ? 'right-0' : 'left-0'
-<<<<<<< HEAD
-                  } bg-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-lg transition-all duration-200 ease-in-out`}
-                >
-                  <button
-                    onClick={() => handleReply(msg)}
-                    className="block px-4 py-2 hover:bg-gray-700 rounded-t-lg w-full text-left"
-=======
                   } bg-gray-800/95 text-white text-sm rounded-lg shadow-2xl backdrop-blur-sm transition-all duration-200 ease-in-out transform ${
                     activeMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                   }`}
@@ -304,30 +291,20 @@ const ChatContainer = () => {
                   <button
                     onClick={(e) => handleReply(msg, e)}
                     className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-t-lg w-full text-left transition-colors"
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                   >
                     Reply
                   </button>
                   {msg.senderId._id === authUser._id && (
                     <button
-<<<<<<< HEAD
-                      onClick={() => toggleDeleteMenu(msg._id)}
-                      className="block px-4 py-2 hover:bg-gray-700 rounded-b-lg w-full text-left"
-=======
                       onClick={(e) => toggleDeleteMenu(msg._id, e)}
                       className="block px-4 py-2.5 hover:bg-violet-700/50 rounded-b-lg w-full text-left transition-colors"
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                     >
                       Delete
                     </button>
                   )}
                   {msg.senderId._id === authUser._id && deleteMenu === msg._id && (
                     <div
-<<<<<<< HEAD
-                      className={`absolute right-0 mt-1 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs sm:text-sm rounded-lg shadow-xl border border-gray-700 transform scale-95 transition-transform duration-200 ease-in-out z-30 ${
-=======
                       className={`absolute right-0 mt-1 bg-gray-900/95 text-white text-xs rounded-lg shadow-2xl backdrop-blur-sm transition-all duration-200 ease-in-out z-30 transform ${
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
                         deleteMenu === msg._id ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                       }`}
                     >
@@ -390,8 +367,7 @@ const ChatContainer = () => {
                 <p className="flex-1 truncate font-medium">
                   Replying to {replyingTo.senderId._id === authUser._id ? 'You' : selectedUser.fullName}: {replyingTo.text || 'Image'}
                 </p>
-<<<<<<< HEAD
-                <button onClick={cancelReply} className="text-red-500 text-sm">Cancel</button>
+                <button onClick={cancelReply} className="text-red-400 text-sm font-medium hover:text-red-500">Cancel</button>
               </div>
               <div className="flex gap-2 mt-2">
                 <button onClick={() => addEmoji('❤️')} className="text-lg hover:bg-gray-600 p-1 rounded">❤️</button>
@@ -399,46 +375,13 @@ const ChatContainer = () => {
                 <button onClick={() => addEmoji('👎')} className="text-lg hover:bg-gray-600 p-1 rounded">👎</button>
                 <button onClick={() => addEmoji('😎')} className="text-lg hover:bg-gray-600 p-1 rounded">😎</button>
                 <button onClick={() => addEmoji('😄')} className="text-lg hover:bg-gray-600 p-1 rounded">😄</button>
-                <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded-full">🚖</button>
-=======
-                <button onClick={cancelReply} className="text-red-400 text-sm font-medium hover:text-red-500">Cancel</button>
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
+                <button onClick={() => addEmoji('🚀')} className="text-lg hover:bg-gray-600 p-1 rounded-full">🚀</button>
               </div>
             </div>
           )}
 
-<<<<<<< HEAD
-          <div className="flex items-center bg-gray-100/12 px-4 rounded-full">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
-              placeholder={
-                selectedUser?.blocked
-                  ? "Cannot message a blocked user"
-                  : replyingTo
-                    ? "Type your reply..."
-                    : "Send a message"
-              }
-              className="flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent"
-              disabled={selectedUser?.blocked}
-            />
-
-            <input
-              type="file"
-              id="image"
-              accept="image/png, image/jpeg"
-              hidden
-              onChange={handleSendImage}
-              disabled={selectedUser?.blocked}
-            />
-
-            <label htmlFor="image">
-=======
           <div className="flex items-center gap-2 relative">
             <div className="flex gap-1.5">
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
               <img
                 src={emojiIcon}
                 alt="Emoji Picker"
@@ -528,19 +471,12 @@ const ChatContainer = () => {
         autoPlay
         loop
         muted
-<<<<<<< HEAD
         onError={(e) => console.log('Video failed to load error: ', e)}
-=======
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
       >
         <source src={assets.Sample} type="video/mp4" />
         Your browser does not support this video tag.
       </video>
-<<<<<<< HEAD
-      <p className="text-lg font-medium text-center">Feel free to chat</p>
-=======
       <p className="text-lg font-semibold text-white">Start a conversation</p>
->>>>>>> 92f475f886e6495c28763b7c5e932f299611f9e0
     </div>
   );
 };
