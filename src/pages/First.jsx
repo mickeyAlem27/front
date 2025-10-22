@@ -237,8 +237,7 @@ const First = () => {
               {/* Animated Statistics */}
               <div className={`flex space-x-6 text-white ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '700ms' }}>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">10K+</div>
-                  <div className="text-sm text-gray-300">Active Users</div>
+                
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-400">99.9%</div>
